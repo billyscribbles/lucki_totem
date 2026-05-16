@@ -64,6 +64,30 @@
   transform: scale(0.96);
 }
 
+.reveal-modal__topbar-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.reveal-modal__counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid rgba(212, 179, 90, 0.22);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+.reveal-modal__counter strong {
+  font-weight: 600;
+  color: var(--gold);
+}
+
 .reveal-modal__stage {
   flex: 1;
   display: grid;

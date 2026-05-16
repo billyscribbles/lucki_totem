@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
-import { X } from 'lucide-react'
+import { X, Package } from 'lucide-react'
 import { getRarity } from '../data/rarities.js'
 import {
   BOX_LINEUP,
@@ -286,15 +286,21 @@ export default function BlindBoxReveal() {
             {status}
           </span>
         </div>
-        <button
-          type="button"
-          className="reveal-modal__close"
-          onClick={closeReveal}
-          ref={closeRef}
-        >
-          <X size={14} strokeWidth={2} aria-hidden="true" />
-          Close
-        </button>
+        <div className="reveal-modal__topbar-end">
+          <span className="reveal-modal__counter" aria-live="polite">
+            <Package size={13} strokeWidth={2} aria-hidden="true" />
+            <strong>{counterLabel}</strong>
+          </span>
+          <button
+            type="button"
+            className="reveal-modal__close"
+            onClick={closeReveal}
+            ref={closeRef}
+          >
+            <X size={14} strokeWidth={2} aria-hidden="true" />
+            Close
+          </button>
+        </div>
       </div>
 
       <div className="reveal-modal__stage" style={stageStyle}>
