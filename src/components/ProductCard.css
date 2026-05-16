@@ -47,6 +47,13 @@
   text-transform: uppercase;
 }
 
+/* Wraps the media + body — the click target into the detail page.
+   Inherits colour so the name and sub keep their own tones. */
+.product__link {
+  display: block;
+  color: inherit;
+}
+
 .product__media {
   display: grid;
   place-items: center;
