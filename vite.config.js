@@ -6,6 +6,10 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',
     port: 4173,
+    // Serves only built static assets behind Railway's proxy, so the
+    // dev-server Host check (DNS-rebinding protection) isn't needed here.
+    // Without this, Vite 5.4.12+ returns 403 for the Railway domain.
+    allowedHosts: true,
   },
   build: {
     sourcemap: false,
