@@ -1,4 +1,4 @@
-import { RARITIES } from '../data/rarities.js'
+import { RARITIES, TOTAL_WEIGHT } from '../data/rarities.js'
 
 // The 7 boxes shown in the reveal — one per rarity tier, ordered
 // common → rarest (left to right on the stage). The lineup is
@@ -14,22 +14,24 @@ export const BOX_LINEUP = [
   'legend',
 ]
 
-// Weighted draw across all seven tiers — 48 / 25 / 13 / 7 / 4 / 2 / 1,
-// summing to 100. RARITIES is the single source of truth for the
-// weights; the `odds` strings shown in the UI must stay in step.
+// Weighted draw across all seven tiers — 48 / 25 / 13 / 7 / 4 / 2 / 1.
+// Each tier's `weight` is its draw frequency; the `odds` string the UI
+// prints is derived from that same weight in rarities.js, so what the
+// player sees and what this function rolls can never disagree.
 //
 // NOTE: in production this MUST run on the server. A client-side roll
 // can be patched to always pull Legendary. For this landing demo the
 // draw is local; swap pickWinner() for a fetch to a signed endpoint
 // before taking real money.
 export function pickWinner() {
-  const total = RARITIES.reduce((sum, r) => sum + r.weight, 0)
-  let roll = Math.random() * total
+  // Roll across the true weight total — not a hardcoded 100 — so the
+  // draw stays correct even if the weights are ever adjusted.
+  let roll = Math.random() * TOTAL_WEIGHT
   for (const r of RARITIES) {
     roll -= r.weight
-    if (roll <= 0) return r.key
+    if (roll < 0) return r.key
   }
-  return RARITIES[0].key
+  return RARITIES[RARITIES.length - 1].key
 }
 
 // Fisher-Yates, non-mutating.

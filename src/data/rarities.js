@@ -1,9 +1,12 @@
 // The seven rarity tiers. Used by the lineup, product cards, the reveal
 // flow and the inventory drawer, so it lives in one place.
 // `color` is a CSS var reference — valid anywhere it lands on a custom
-// property or a color property. `weight` drives the weighted draw.
+// property or a color property. `weight` drives the weighted draw and is
+// the single source of truth — the `odds` string shown across the UI is
+// derived from it below, so the displayed odds can never drift from the
+// real drop rate.
 
-export const RARITIES = [
+const TIERS = [
   {
     key: 'common',
     label: 'Common',
@@ -11,7 +14,6 @@ export const RARITIES = [
     image: '/whale/common.png',
     color: 'var(--rar-common)',
     glow: 'rgba(212, 219, 229, 0.55)',
-    odds: '48%',
     weight: 48,
     tagline: ['Calm and steady.', 'Clear hands.'],
     suit: '♠',
@@ -25,7 +27,6 @@ export const RARITIES = [
     image: '/whale/uncommon.png',
     color: 'var(--rar-uncommon)',
     glow: 'rgba(74, 222, 128, 0.55)',
-    odds: '25%',
     weight: 25,
     tagline: ['One move.', 'All in.'],
     suit: '♣',
@@ -39,7 +40,6 @@ export const RARITIES = [
     image: '/whale/rare.png',
     color: 'var(--rar-rare)',
     glow: 'rgba(59, 130, 246, 0.6)',
-    odds: '13%',
     weight: 13,
     tagline: ['Go with it.', 'Trust the current.'],
     suit: '♦',
@@ -53,7 +53,6 @@ export const RARITIES = [
     image: '/whale/rose.png',
     color: 'var(--rar-rose)',
     glow: 'rgba(244, 114, 182, 0.55)',
-    odds: '7%',
     weight: 7,
     tagline: ['In full bloom.', 'Luck runs warm.'],
     suit: '♡',
@@ -67,7 +66,6 @@ export const RARITIES = [
     image: '/whale/ultra.png',
     color: 'var(--rar-ultra)',
     glow: 'rgba(255, 106, 61, 0.6)',
-    odds: '4%',
     weight: 4,
     tagline: ['Feeling it.', "Can't miss."],
     suit: '♥',
@@ -81,7 +79,6 @@ export const RARITIES = [
     image: '/whale/noir.png',
     color: 'var(--rar-noir)',
     glow: 'rgba(167, 139, 250, 0.6)',
-    odds: '2%',
     weight: 2,
     tagline: ['Reads the dark.', 'Keeps the secret.'],
     suit: '♚',
@@ -95,7 +92,6 @@ export const RARITIES = [
     image: '/whale/legend.png',
     color: 'var(--rar-legend)',
     glow: 'rgba(245, 197, 66, 0.7)',
-    odds: '1%',
     weight: 1,
     tagline: ['Your time.', 'Your legacy.'],
     suit: '♛',
@@ -103,6 +99,23 @@ export const RARITIES = [
       "Crown Whale surfaces once a season, if that. It doesn't chase the moment — it waits for the moment to arrive, then takes it. Your time, your legacy.",
   },
 ]
+
+// Total of every tier's draw weight — the denominator pickWinner() rolls
+// against. Deriving the displayed odds from this exact sum means the UI
+// stays accurate even if the weights are retuned and no longer total 100.
+export const TOTAL_WEIGHT = TIERS.reduce((sum, t) => sum + t.weight, 0)
+
+// Format a tier's true probability as the `XX%` string the UI prints.
+// Rounds to one decimal so adjusted, non-integer weights still display
+// cleanly; whole-number percentages print without a trailing `.0`.
+export function formatOdds(weight) {
+  const pct = Math.round((weight / TOTAL_WEIGHT) * 1000) / 10
+  return `${pct}%`
+}
+
+// `odds` is computed, never typed by hand — it is guaranteed to match the
+// weight pickWinner() actually draws against.
+export const RARITIES = TIERS.map((t) => ({ ...t, odds: formatOdds(t.weight) }))
 
 const BY_KEY = Object.fromEntries(RARITIES.map((r) => [r.key, r]))
 
