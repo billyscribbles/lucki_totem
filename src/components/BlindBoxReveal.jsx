@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { X, Package } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { getRarity } from '../data/rarities.js'
 import {
   BOX_LINEUP,
@@ -127,6 +128,7 @@ export default function BlindBoxReveal() {
   const [group, setGroup] = useState(null) // { packSize, startRemaining }
   const [openedCount, setOpenedCount] = useState(0)
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   const timers = useRef([])
   const modalRef = useRef(null)
@@ -231,6 +233,15 @@ export default function BlindBoxReveal() {
     setOpenedCount((n) => n + 1)
     startBox()
   }, [winnerKey, collect, startBox])
+
+  // No boxes left in the run: bank this whale digitally, then head back
+  // to the blind-box shop to grab more.
+  const shopMore = useCallback(() => {
+    if (!winnerKey) return
+    collect(winnerKey, { shipping: false })
+    closeReveal()
+    navigate('/blind-boxes')
+  }, [winnerKey, collect, closeReveal, navigate])
 
   // Focus management: trap Tab inside the dialog, close on Escape.
   useEffect(() => {
@@ -400,7 +411,7 @@ export default function BlindBoxReveal() {
                 >
                   Keep Digital
                 </button>
-                {hasMore && (
+                {hasMore ? (
                   <button
                     type="button"
                     className="btn btn--gold btn--sm"
@@ -408,10 +419,18 @@ export default function BlindBoxReveal() {
                   >
                     Spin Again <span aria-hidden="true">→</span>
                   </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn--gold btn--sm"
+                    onClick={shopMore}
+                  >
+                    Shop More <span aria-hidden="true">→</span>
+                  </button>
                 )}
                 <button
                   type="button"
-                  className={`btn btn--sm ${hasMore ? 'btn--line' : 'btn--gold'}`}
+                  className="btn btn--line btn--sm"
                   onClick={() => setPhase('shipping')}
                 >
                   Ship It to Me <span aria-hidden="true">→</span>
