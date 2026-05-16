@@ -2,26 +2,30 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef } f
 import { getRarity } from '../data/rarities.js'
 import { makeSerial } from '../lib/draw.js'
 
-// Single store for the shopping + collecting loop: cart, inventory,
-// which overlay is open, and the toast. Cart and inventory persist to
-// localStorage so a refresh keeps your pulls. No external state lib —
-// one provider, one hook, the way the rest of this codebase stays lean.
+// Single store for the buy + unbox loop. Three persisted arrays:
+//   cart       — line items awaiting checkout
+//   purchases  — sealed box groups (paid for, not yet opened)
+//   collection — whales pulled from opened boxes
+// Plus the overlay state (drawer / checkout / reveal) and the toast.
+// One provider, one hook — the way this codebase stays lean.
 
 const LuckiContext = createContext(null)
 const STORE_KEY = 'lucki:v1'
 
 function loadPersisted() {
-  if (typeof window === 'undefined') return { cart: [], inventory: [] }
+  const empty = { cart: [], purchases: [], collection: [] }
+  if (typeof window === 'undefined') return empty
   try {
     const raw = window.localStorage.getItem(STORE_KEY)
-    if (!raw) return { cart: [], inventory: [] }
+    if (!raw) return empty
     const parsed = JSON.parse(raw)
     return {
       cart: Array.isArray(parsed.cart) ? parsed.cart : [],
-      inventory: Array.isArray(parsed.inventory) ? parsed.inventory : [],
+      purchases: Array.isArray(parsed.purchases) ? parsed.purchases : [],
+      collection: Array.isArray(parsed.collection) ? parsed.collection : [],
     }
   } catch {
-    return { cart: [], inventory: [] }
+    return empty
   }
 }
 
@@ -34,24 +38,30 @@ function formatDate(d) {
 export function LuckiProvider({ children }) {
   const persisted = useRef(loadPersisted()).current
   const [cart, setCart] = useState(persisted.cart)
-  const [inventory, setInventory] = useState(persisted.inventory)
+  const [purchases, setPurchases] = useState(persisted.purchases)
+  const [collection, setCollection] = useState(persisted.collection)
   const [drawer, setDrawer] = useState(null) // 'cart' | 'inventory' | null
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [revealOpen, setRevealOpen] = useState(false)
+  const [revealBoxId, setRevealBoxId] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
 
   // Persist the parts worth keeping across sessions.
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORE_KEY, JSON.stringify({ cart, inventory }))
+      window.localStorage.setItem(
+        STORE_KEY,
+        JSON.stringify({ cart, purchases, collection }),
+      )
     } catch {
       /* private mode / quota — non-fatal */
     }
-  }, [cart, inventory])
+  }, [cart, purchases, collection])
 
   // Lock the page behind any overlay without a layout jump.
   useEffect(() => {
-    const locked = revealOpen || drawer !== null
+    const locked = revealOpen || checkoutOpen || drawer !== null
     if (!locked) return
     const { body, documentElement } = document
     const gutter = window.innerWidth - documentElement.clientWidth
@@ -63,7 +73,7 @@ export function LuckiProvider({ children }) {
       body.style.overflow = prevOverflow
       body.style.paddingRight = prevPad
     }
-  }, [revealOpen, drawer])
+  }, [revealOpen, checkoutOpen, drawer])
 
   const showToast = useCallback((message) => {
     setToast({ id: Date.now(), message })
@@ -88,16 +98,54 @@ export function LuckiProvider({ children }) {
   const openDrawer = useCallback((which) => setDrawer(which), [])
   const closeDrawer = useCallback(() => setDrawer(null), [])
 
-  const openReveal = useCallback(() => {
+  const openCheckout = useCallback(() => {
     setDrawer(null)
+    setCheckoutOpen(true)
+  }, [])
+  const closeCheckout = useCallback(() => setCheckoutOpen(false), [])
+
+  // Payment succeeded: turn every cart line into a sealed purchase
+  // group, then empty the cart. Each group starts fully sealed
+  // (remaining === packSize). Returns the new groups so the caller
+  // can jump straight into opening the first one.
+  const completePurchase = useCallback(() => {
+    const stamp = Date.now()
+    const date = formatDate(new Date())
+    let groups = []
+    setCart((c) => {
+      groups = c.map((item, i) => ({
+        id: `pur-${stamp}-${i}`,
+        productId: item.id,
+        name: item.name,
+        sub: item.sub,
+        orb: item.orb,
+        packSize: item.packSize || 1,
+        remaining: item.packSize || 1,
+        purchasedAt: date,
+      }))
+      return []
+    })
+    setPurchases((p) => [...groups, ...p])
+    return groups
+  }, [])
+
+  const openReveal = useCallback((boxId) => {
+    setDrawer(null)
+    setCheckoutOpen(false)
+    setRevealBoxId(boxId)
     setRevealOpen(true)
   }, [])
-  const closeReveal = useCallback(() => setRevealOpen(false), [])
+  const closeReveal = useCallback(() => {
+    setRevealOpen(false)
+    setRevealBoxId(null)
+  }, [])
 
-  // Records a pulled whale into the collection. `shipping` marks whether
-  // the collector chose physical fulfilment over a digital keep.
+  // Records one opened whale into the collection and decrements the
+  // sealed box group it came from (dropping the group at zero).
+  // `shipping` marks physical fulfilment; `shippingDetails` carries the
+  // address when the collector chose to ship.
   const collect = useCallback(
-    (rarityKey, { shipping }) => {
+    (rarityKey, { shipping, shippingDetails = null }) => {
       const rarity = getRarity(rarityKey)
       const item = {
         id: `${rarityKey}-${Date.now()}`,
@@ -106,32 +154,46 @@ export function LuckiProvider({ children }) {
         whale: rarity.whale,
         date: formatDate(new Date()),
         shipping,
+        shippingDetails,
       }
-      setInventory((inv) => [item, ...inv])
-      setRevealOpen(false)
+      setCollection((inv) => [item, ...inv])
+      setPurchases((p) =>
+        p
+          .map((g) =>
+            g.id === revealBoxId ? { ...g, remaining: g.remaining - 1 } : g,
+          )
+          .filter((g) => g.remaining > 0),
+      )
       if (shipping) {
         showToast(`Shipping the ${rarity.whale} to you`)
       } else {
         showToast(`${rarity.whale} added to your collection`)
-        setTimeout(() => setDrawer('inventory'), 220)
       }
       return item
     },
-    [showToast],
+    [revealBoxId, showToast],
   )
+
+  const sealedCount = purchases.reduce((sum, g) => sum + g.remaining, 0)
 
   const value = {
     cart,
-    inventory,
+    purchases,
+    collection,
     drawer,
+    checkoutOpen,
     revealOpen,
+    revealBoxId,
     toast,
     cartCount: cart.length,
-    invCount: inventory.length,
+    invCount: sealedCount + collection.length,
     addToCart,
     removeFromCart,
     openDrawer,
     closeDrawer,
+    openCheckout,
+    closeCheckout,
+    completePurchase,
     openReveal,
     closeReveal,
     collect,
