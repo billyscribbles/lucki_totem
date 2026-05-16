@@ -104,16 +104,19 @@ export function LuckiProvider({ children }) {
   }, [])
   const closeCheckout = useCallback(() => setCheckoutOpen(false), [])
 
-  // Payment succeeded: turn every cart line into a sealed purchase
-  // group, then empty the cart. Each group starts fully sealed
-  // (remaining === packSize). Returns the new groups so the caller
-  // can jump straight into opening the first one.
+  // Payment succeeded: turn every blind-box cart line into a sealed
+  // purchase group, then empty the cart. Standalone protectors ship
+  // directly — they never become openable boxes. Each group starts
+  // fully sealed (remaining === packSize). Returns the new groups so
+  // the caller can jump straight into opening the first one.
   const completePurchase = useCallback(() => {
     const stamp = Date.now()
     const date = formatDate(new Date())
     let groups = []
     setCart((c) => {
-      groups = c.map((item, i) => ({
+      groups = c
+        .filter((item) => item.type !== 'protector')
+        .map((item, i) => ({
         id: `pur-${stamp}-${i}`,
         productId: item.id,
         name: item.name,

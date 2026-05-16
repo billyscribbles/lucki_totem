@@ -8,6 +8,7 @@ import CartDrawer from './components/CartDrawer.jsx'
 import InventoryDrawer from './components/InventoryDrawer.jsx'
 import Toast from './components/Toast.jsx'
 import Home from './pages/Home.jsx'
+import ShopPage from './pages/ShopPage.jsx'
 import CollectionPage from './pages/CollectionPage.jsx'
 import WhalePage from './pages/WhalePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
@@ -23,6 +24,7 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<ShopPage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/whale/:key" element={<WhalePage />} />
           <Route path="*" element={<NotFoundPage />} />

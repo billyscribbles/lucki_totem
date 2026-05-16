@@ -4,7 +4,7 @@ import './Footer.css'
 // Best-effort in-page targets for footer links on this single-scroll site.
 const LINK_TARGETS = {
   'Blind Boxes': '#featured',
-  Protectors: '#protect',
+  Protectors: '/shop',
   Bundles: '#featured',
   Apparel: '#featured',
   'Rarity Guide': '#rarities',

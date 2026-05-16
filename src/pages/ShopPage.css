@@ -1,0 +1,47 @@
+/* The Protector Shop page — intro block, then the protector grid.
+   The grid itself (.product-grid) is styled in ProductCard.css. */
+
+.shop__intro {
+  max-width: 640px;
+  margin-bottom: 56px;
+}
+.shop__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.shop__eyebrow span {
+  color: var(--gold);
+  font-size: 14px;
+}
+.shop__title {
+  margin: 0 0 16px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.shop__title-accent {
+  color: var(--gold);
+}
+.shop__sub {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+@media (max-width: 760px) {
+  .shop__intro {
+    margin-bottom: 40px;
+  }
+}

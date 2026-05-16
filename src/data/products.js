@@ -1,10 +1,12 @@
-// Featured Collection — the four cards above the rarity lineup.
-// `orb` references a rarity key so the card glow matches the tier.
-// `packSize` is how many sealed boxes the purchase yields.
+// Product data. `orb` references a rarity key so the card glow matches
+// the tier. `type` separates the blind-box loop ('box') from standalone
+// card protectors ('protector') — checkout branches on it.
+// `packSize` is how many sealed boxes a blind-box purchase yields.
 
 export const FEATURED = [
   {
     id: 'blind-box-s01',
+    type: 'box',
     tag: 'New',
     tagColor: '#d4dbe5',
     name: 'Lucki Blind Box',
@@ -16,6 +18,7 @@ export const FEATURED = [
   },
   {
     id: 'blind-box-3pack',
+    type: 'box',
     tag: '3-Pack',
     tagColor: '#3b82f6',
     name: 'Blind Box 3-Pack',
@@ -27,6 +30,7 @@ export const FEATURED = [
   },
   {
     id: 'blind-box-5pack',
+    type: 'box',
     tag: '5-Pack',
     tagColor: '#f5c542',
     name: 'Blind Box 5-Pack',
@@ -38,6 +42,7 @@ export const FEATURED = [
   },
   {
     id: 'blind-box-megabox',
+    type: 'box',
     tag: 'Mega Box',
     tagColor: '#c77dff',
     name: 'Blind Box Mega Box',
@@ -46,5 +51,76 @@ export const FEATURED = [
     packSize: 8,
     orb: 'ultra',
     image: '/images/blind-box-megabox.png',
+  },
+]
+
+// Standalone card protectors — no mystery, pick the whale you want.
+// Sold directly through the /shop page; they skip the unboxing reveal.
+export const PROTECTORS = [
+  {
+    id: 'protector-pale',
+    type: 'protector',
+    tag: 'Acrylic',
+    tagColor: '#d4dbe5',
+    name: 'Pale Whale Protector',
+    sub: 'Weighted acrylic · clear-read finish',
+    price: 24.0,
+    orb: 'common',
+    image: '/whale/common.png',
+  },
+  {
+    id: 'protector-clover',
+    type: 'protector',
+    tag: 'Best Seller',
+    tagColor: '#4ade80',
+    name: 'Clover Whale Protector',
+    sub: 'Weighted acrylic · emerald cast',
+    price: 26.0,
+    orb: 'uncommon',
+    image: '/whale/uncommon.png',
+  },
+  {
+    id: 'protector-flow',
+    type: 'protector',
+    tag: 'Acrylic',
+    tagColor: '#3b82f6',
+    name: 'Flow Whale Protector',
+    sub: 'Weighted acrylic · sapphire cast',
+    price: 28.0,
+    orb: 'rare',
+    image: '/whale/rare.png',
+  },
+  {
+    id: 'protector-ember',
+    type: 'protector',
+    tag: 'Acrylic',
+    tagColor: '#ff6a3d',
+    name: 'Ember Whale Protector',
+    sub: 'Weighted acrylic · molten cast',
+    price: 32.0,
+    orb: 'ultra',
+    image: '/whale/ultra.png',
+  },
+  {
+    id: 'protector-crown',
+    type: 'protector',
+    tag: 'Limited',
+    tagColor: '#f5c542',
+    name: 'Crown Whale Protector',
+    sub: 'Weighted acrylic · gilded edition',
+    price: 38.0,
+    orb: 'legend',
+    image: '/whale/legend.png',
+  },
+  {
+    id: 'protector-noir',
+    type: 'protector',
+    tag: 'Limited',
+    tagColor: '#a8a99f',
+    name: 'Noir Whale Protector',
+    sub: 'Weighted acrylic · midnight edition',
+    price: 36.0,
+    orb: 'rare',
+    image: '/whale/noir.png',
   },
 ]

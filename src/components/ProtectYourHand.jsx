@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Reveal from './Reveal.jsx'
 import './ProtectYourHand.css'
 
@@ -43,9 +44,9 @@ export default function ProtectYourHand() {
                 ))}
               </ul>
 
-              <a className="btn btn--line btn--sm protect__cta" href="#featured">
+              <Link className="btn btn--line btn--sm protect__cta" to="/shop">
                 Shop Protectors <span aria-hidden="true">→</span>
-              </a>
+              </Link>
             </div>
 
             <div className="protect__tableau">

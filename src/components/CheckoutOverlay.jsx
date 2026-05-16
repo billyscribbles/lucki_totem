@@ -165,6 +165,7 @@ export default function CheckoutOverlay() {
           <CheckoutSuccess
             order={order}
             onOpenNow={openReveal}
+            onClose={closeCheckout}
             onInventory={() => {
               closeCheckout()
               openDrawer('inventory')
@@ -260,8 +261,10 @@ function CheckoutForm({ cart, total, card, errors, onField, onPay }) {
   )
 }
 
-function CheckoutSuccess({ order, onOpenNow, onInventory }) {
+function CheckoutSuccess({ order, onOpenNow, onInventory, onClose }) {
   const { purchases } = useLucki()
+  // A protector-only order has no sealed boxes to open — it just ships.
+  const hasBox = order?.items.some((item) => item.type !== 'protector')
   const firstId = purchases[0]?.id
 
   return (
@@ -269,9 +272,13 @@ function CheckoutSuccess({ order, onOpenNow, onInventory }) {
       <span className="checkout-success__icon" aria-hidden="true">
         <CheckCircle2 size={44} strokeWidth={1.5} />
       </span>
-      <h2 className="checkout-success__title">Payment successful</h2>
+      <h2 className="checkout-success__title">
+        {hasBox ? 'Payment successful' : 'Order confirmed'}
+      </h2>
       <p className="checkout-success__sub">
-        Your sealed boxes are waiting in your inventory.
+        {hasBox
+          ? 'Your sealed boxes are waiting in your inventory.'
+          : 'Your card protectors are on the way.'}
       </p>
 
       {order && (
@@ -290,21 +297,33 @@ function CheckoutSuccess({ order, onOpenNow, onInventory }) {
       )}
 
       <div className="checkout-success__actions">
-        <button
-          type="button"
-          className="btn btn--gold btn--block btn--sm"
-          onClick={() => firstId && onOpenNow(firstId)}
-          disabled={!firstId}
-        >
-          Open a Box Now <span aria-hidden="true">→</span>
-        </button>
-        <button
-          type="button"
-          className="btn btn--line btn--block btn--sm"
-          onClick={onInventory}
-        >
-          Go to Inventory
-        </button>
+        {hasBox ? (
+          <>
+            <button
+              type="button"
+              className="btn btn--gold btn--block btn--sm"
+              onClick={() => firstId && onOpenNow(firstId)}
+              disabled={!firstId}
+            >
+              Open a Box Now <span aria-hidden="true">→</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn--line btn--block btn--sm"
+              onClick={onInventory}
+            >
+              Go to Inventory
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="btn btn--gold btn--block btn--sm"
+            onClick={onClose}
+          >
+            Done
+          </button>
+        )}
       </div>
     </div>
   )
