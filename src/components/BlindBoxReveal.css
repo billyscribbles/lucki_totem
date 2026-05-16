@@ -238,3 +238,57 @@
     transform: scale(0.82);
   }
 }
+
+/* ── Shipping phase ──────────────────────────────────────────────── */
+.reveal__ship {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.reveal__ship-tier {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.ship-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ship-form__title {
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--ink);
+  text-align: center;
+}
+.ship-form__actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* ── Placed phase ────────────────────────────────────────────────── */
+.reveal__placed {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  animation: reveal-in 0.6s ease-out;
+}
+.reveal__placed-msg {
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--ink-dim);
+  max-width: 320px;
+}

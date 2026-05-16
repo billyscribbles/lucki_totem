@@ -12,6 +12,7 @@ import {
 import { useLucki } from '../store/LuckiContext.jsx'
 import MysteryBox from './MysteryBox.jsx'
 import WhaleOrb from './WhaleOrb.jsx'
+import ShippingForm from './ShippingForm.jsx'
 import './BlindBoxReveal.css'
 
 function reducedMotion() {
@@ -89,29 +90,56 @@ function RevealSparkles() {
   )
 }
 
-// The reveal modal. Eight boxes spin, vanish one by one, the survivor
-// bursts open. The winner is drawn up front (see draw.js) and the box
-// choreography is cosmetic. Reduced-motion skips straight to the result.
+// The reveal modal. Bound to one sealed box group (revealBoxId): eight
+// boxes spin, vanish one by one, the survivor bursts open. After each
+// pull the collector keeps the whale digitally or ships it. Multi-pack
+// groups expose "Spin Again" until every box is opened.
 export default function BlindBoxReveal() {
-  const { revealOpen, closeReveal, collect } = useLucki()
-  const [phase, setPhase] = useState('idle') // idle | spinning | suspense | opening | revealed
+  const { revealOpen, revealBoxId, closeReveal, collect, purchases } = useLucki()
+
+  // idle | ready | spinning | suspense | opening | revealed | shipping | placed
+  const [phase, setPhase] = useState('idle')
   const [boxes, setBoxes] = useState([])
   const [winnerKey, setWinnerKey] = useState(null)
   const [winnerIdx, setWinnerIdx] = useState(-1)
   const [serial, setSerial] = useState(null)
+  const [group, setGroup] = useState(null) // { packSize, startRemaining }
+  const [openedCount, setOpenedCount] = useState(0)
+  const [shipped, setShipped] = useState(false) // how the last box was placed
 
   const timers = useRef([])
   const modalRef = useRef(null)
   const closeRef = useRef(null)
-  const keepRef = useRef(null)
   const spinRef = useRef(null)
+  const actionRef = useRef(null)
+  // Read purchases without making the open effect re-run on every collect().
+  const purchasesRef = useRef(purchases)
+  purchasesRef.current = purchases
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout)
     timers.current = []
   }, [])
 
-  // Run (or reset) the draw whenever the modal opens.
+  // Draw and lay out a single box. Used on open and on Spin Again.
+  const startBox = useCallback(() => {
+    clearTimers()
+    const win = pickWinner()
+    setWinnerKey(win)
+    setSerial(makeSerial())
+    if (reducedMotion()) {
+      setBoxes([])
+      setWinnerIdx(-1)
+      timers.current.push(setTimeout(() => setPhase('revealed'), 420))
+      return
+    }
+    setBoxes(BOX_LINEUP.map((rarity, i) => ({ id: i, rarity, vanished: false })))
+    setWinnerIdx(BOX_LINEUP.indexOf(win))
+    setPhase('ready')
+  }, [clearTimers])
+
+  // Snapshot the box group and start the first box whenever the modal
+  // opens; tear everything down when it closes.
   useEffect(() => {
     if (!revealOpen) {
       clearTimers()
@@ -120,37 +148,27 @@ export default function BlindBoxReveal() {
       setWinnerKey(null)
       setWinnerIdx(-1)
       setSerial(null)
+      setGroup(null)
+      setOpenedCount(0)
+      setShipped(false)
       return undefined
     }
-
-    const win = pickWinner()
-    setWinnerKey(win)
-    setSerial(makeSerial())
-
-    if (reducedMotion()) {
-      setBoxes([])
-      setWinnerIdx(-1)
-      timers.current.push(setTimeout(() => setPhase('revealed'), 420))
-      return clearTimers
-    }
-
-    // Lay the boxes out common → rarest, left to right, and wait for
-    // the player to hit Spin.
-    setBoxes(BOX_LINEUP.map((rarity, i) => ({ id: i, rarity, vanished: false })))
-    setWinnerIdx(BOX_LINEUP.indexOf(win)) // BOX_LINEUP holds every tier, common-first
-    setPhase('ready')
-
+    const g = purchasesRef.current.find((x) => x.id === revealBoxId)
+    setGroup(
+      g
+        ? { packSize: g.packSize, startRemaining: g.remaining }
+        : { packSize: 1, startRemaining: 1 },
+    )
+    setOpenedCount(0)
+    startBox()
     return clearTimers
-  }, [revealOpen, clearTimers])
+  }, [revealOpen, revealBoxId, startBox, clearTimers])
 
-  // Player hit Spin: kick off the choreography — boxes spin, the seven
-  // non-winners poof one by one (slowing down), the survivor opens.
+  // Player hit Spin: boxes spin, the seven non-winners poof one by one
+  // (slowing down), the survivor opens.
   const startSpin = useCallback(() => {
     if (phase !== 'ready') return
     const order = shuffle(boxes.map((b) => b.id).filter((id) => id !== winnerIdx))
-    // The first box poofs once the spin has wound up and held at top
-    // speed; gaps then widen (POOF_GAPS) in step with the spin gliding
-    // down, so the last box vanishes just as the spin reaches a stop.
     let t = SPIN_DECAY_START_MS
     order.forEach((id, n) => {
       const at = t
@@ -161,14 +179,24 @@ export default function BlindBoxReveal() {
       )
       t += POOF_GAPS[n]
     })
-
-    // `t` now sits just past the still pause held on the lone survivor:
-    // let the spotlight glow breathe, then zoom it open as the win.
     timers.current.push(setTimeout(() => setPhase('suspense'), t - 200))
     timers.current.push(setTimeout(() => setPhase('opening'), t + 800))
     timers.current.push(setTimeout(() => setPhase('revealed'), t + 1900))
     setPhase('spinning')
   }, [phase, boxes, winnerIdx])
+
+  // Place the just-pulled whale into the collection, then move to the
+  // post-box screen.
+  const placeWhale = useCallback(
+    (shipping, shippingDetails) => {
+      if (!winnerKey) return
+      collect(winnerKey, { shipping, shippingDetails })
+      setShipped(shipping)
+      setOpenedCount((n) => n + 1)
+      setPhase('placed')
+    },
+    [winnerKey, collect],
+  )
 
   // Focus management: trap Tab inside the dialog, close on Escape.
   useEffect(() => {
@@ -181,7 +209,7 @@ export default function BlindBoxReveal() {
       }
       if (e.key !== 'Tab') return
       const focusable = modalRef.current?.querySelectorAll(
-        'button:not([disabled]), a[href]',
+        'button:not([disabled]), a[href], input',
       )
       if (!focusable || focusable.length === 0) return
       const first = focusable[0]
@@ -201,7 +229,7 @@ export default function BlindBoxReveal() {
   // Move focus to the primary action as the flow advances.
   useEffect(() => {
     if (phase === 'ready') spinRef.current?.focus()
-    else if (phase === 'revealed') keepRef.current?.focus()
+    else if (phase === 'revealed' || phase === 'placed') actionRef.current?.focus()
   }, [phase])
 
   if (!revealOpen) return null
@@ -215,11 +243,20 @@ export default function BlindBoxReveal() {
     phase === 'opening'
   const stageStyle = winner ? { '--r': winner.color, '--r-glow': winner.glow } : undefined
 
-  let status = 'Opening · Lucki Blind Box Series 01'
-  if (phase === 'ready') status = 'Tap spin to draw your whale'
+  const packSize = group?.packSize || 1
+  const startRemaining = group?.startRemaining || 1
+  const boxNumber = Math.min(packSize - startRemaining + openedCount + 1, packSize)
+  const hasMore = openedCount < startRemaining // more boxes left to open
+
+  const boxLabel = packSize > 1 ? `Box ${boxNumber} of ${packSize} · ` : ''
+  let status = `${boxLabel}Lucki Blind Box Series 01`
+  if (phase === 'ready') status = `${boxLabel}Tap spin to draw your whale`
   else if (phase === 'spinning') status = `Drawing from the deck · ${remaining} remain`
   else if (phase === 'suspense') status = 'Your luck is sealed'
   else if (phase === 'revealed' && winner) status = `${winner.label} pulled`
+  else if (phase === 'shipping') status = 'Shipping details'
+  else if (phase === 'placed')
+    status = hasMore ? `${boxLabel}Box opened` : 'All boxes opened'
 
   return (
     <div
@@ -310,18 +347,64 @@ export default function BlindBoxReveal() {
               <button
                 type="button"
                 className="btn btn--line btn--sm"
-                onClick={() => collect(winner.key, { shipping: false })}
-                ref={keepRef}
+                onClick={() => placeWhale(false, null)}
+                ref={actionRef}
               >
-                + Add to Inventory
+                Keep Digital
               </button>
               <button
                 type="button"
                 className="btn btn--gold btn--sm"
-                onClick={() => collect(winner.key, { shipping: true })}
+                onClick={() => setPhase('shipping')}
               >
                 Ship It to Me <span aria-hidden="true">→</span>
               </button>
+            </div>
+          </div>
+        )}
+
+        {phase === 'shipping' && winner && (
+          <div className="reveal__ship">
+            <p className="reveal__ship-tier" style={{ color: winner.color }}>
+              {winner.label} · {winner.whale}
+            </p>
+            <ShippingForm
+              onSubmit={(details) => placeWhale(true, details)}
+              onBack={() => setPhase('revealed')}
+            />
+          </div>
+        )}
+
+        {phase === 'placed' && winner && (
+          <div className="reveal__placed">
+            <div className="reveal__placed-orb">
+              <WhaleOrb rarity={winner.key} size={120} animated={false} />
+            </div>
+            <p className="reveal__placed-msg">
+              {shipped
+                ? `${winner.whale} is on its way to you.`
+                : `${winner.whale} added to your collection.`}
+            </p>
+            <div className="reveal__actions">
+              {hasMore ? (
+                <button
+                  type="button"
+                  className="btn btn--gold btn--sm"
+                  onClick={startBox}
+                  ref={actionRef}
+                >
+                  Spin Again <span aria-hidden="true">→</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn--gold btn--sm"
+                  onClick={closeReveal}
+                  ref={actionRef}
+                >
+                  Done
+                </button>
+              )}
             </div>
           </div>
         )}
