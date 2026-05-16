@@ -18,11 +18,6 @@ export default function OddsLegend({ winnerKey, revealed }) {
               className={`odds-legend__row${isWin ? ' odds-legend__row--win' : ''}`}
               style={isWin ? { '--r': r.color, '--r-glow': r.glow } : undefined}
             >
-              <span
-                className="odds-legend__swatch"
-                style={{ background: r.color }}
-                aria-hidden="true"
-              />
               <span className="odds-legend__label">{r.label}</span>
               <span className="odds-legend__odds">{r.odds}</span>
             </li>

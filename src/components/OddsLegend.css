@@ -41,13 +41,6 @@
     transform var(--t-hover);
 }
 
-.odds-legend__swatch {
-  flex: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-}
-
 .odds-legend__label {
   flex: 1;
   min-width: 0;
@@ -105,10 +98,6 @@
   .odds-legend__row {
     gap: 6px;
     padding: 4px 6px;
-  }
-  /* Drop the tier label on narrow screens — swatch + % only. */
-  .odds-legend__label {
-    display: none;
   }
   .odds-legend__row--win {
     transform: none;
