@@ -316,7 +316,6 @@ export default function BlindBoxReveal() {
     >
       <div className="reveal-modal__topbar">
         <div className="reveal-modal__brand">
-          <span className="lucki-mark reveal-modal__mark">LUCKI</span>
           <span className="reveal-modal__status" aria-live="polite">
             {status}
           </span>
