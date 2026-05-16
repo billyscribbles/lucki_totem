@@ -97,8 +97,87 @@
   box-shadow: 0 0 0 2px var(--bg);
 }
 
+/* Hamburger + full-screen menu — hidden until the mobile breakpoint. */
+.nav__burger {
+  display: none;
+}
+
+.nav__overlay {
+  display: none;
+}
+
 @media (max-width: 760px) {
   .nav__links {
     display: none;
+  }
+
+  .nav__burger {
+    display: grid;
+  }
+
+  /* Full-screen glass menu. Always rendered so it can fade both ways;
+     visibility gates pointer events when closed. */
+  .nav__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background: rgba(5, 7, 12, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+      opacity var(--t-hover),
+      transform var(--t-hover),
+      visibility var(--t-hover);
+  }
+  .nav__overlay--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav__overlay-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(212, 179, 90, 0.12);
+  }
+  .nav__overlay-logo {
+    display: block;
+    height: 72px;
+    width: auto;
+    filter: drop-shadow(0 0 30px rgba(212, 179, 90, 0.2));
+  }
+
+  .nav__overlay-links {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+  .nav__overlay-link {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(212, 179, 90, 0.08);
+    font-family: var(--display);
+    font-size: 30px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    transition: color var(--t-hover);
+  }
+  .nav__overlay-link:hover,
+  .nav__overlay-link:active {
+    color: var(--gold);
+  }
+
+  /* Stagger links in as the overlay opens; --d set per link in JSX. */
+  .nav__overlay--open .nav__overlay-link {
+    animation: rise-in 460ms var(--ease-out) var(--d, 0ms) both;
   }
 }
