@@ -1,7 +1,7 @@
 import { useLucki } from '../store/LuckiContext.jsx'
 import './Toast.css'
 
-// Bottom-centre confirmation pill. Keyed on the toast id so a fresh
+// Bottom-right confirmation pill. Keyed on the toast id so a fresh
 // message always replays the entrance.
 export default function Toast() {
   const { toast } = useLucki()

@@ -330,11 +330,11 @@ ol {
 }
 @keyframes toast-in {
   from {
-    transform: translateX(-50%) translateY(20px);
+    transform: translateY(20px);
     opacity: 0;
   }
   to {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
