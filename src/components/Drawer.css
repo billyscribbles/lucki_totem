@@ -2,7 +2,9 @@
 .drawer-scrim {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  /* Above modals/toast but below the nav, so the nav stays lit while a
+     cart/inventory drawer is open. See layer scale in Navbar.css. */
+  z-index: 1200;
   background: rgba(2, 4, 10, 0.65);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -20,7 +22,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 201;
+  /* Above the nav — the cart/inventory panel covers the nav's right edge. */
+  z-index: 1400;
   width: min(440px, 92vw);
   display: flex;
   flex-direction: column;
