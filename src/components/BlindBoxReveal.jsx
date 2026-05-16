@@ -110,7 +110,7 @@ function RevealSparkles() {
   )
 }
 
-// The reveal modal. Bound to one sealed box group (revealBoxId): ten
+// The reveal modal. Bound to one sealed box group (revealBoxId): seven
 // boxes spin, vanish one by one, the survivor bursts open. After each
 // pull the collector keeps the whale digitally or ships it. Multi-pack
 // groups expose "Spin Again" until every box is opened.
@@ -184,7 +184,7 @@ export default function BlindBoxReveal() {
     return clearTimers
   }, [revealOpen, revealBoxId, startBox, clearTimers])
 
-  // Player hit Spin: boxes spin, the nine non-winners poof one by one
+  // Player hit Spin: boxes spin, the six non-winners poof one by one
   // (slowing down), the survivor opens.
   const startSpin = useCallback(() => {
     if (phase !== 'ready') return
@@ -269,7 +269,7 @@ export default function BlindBoxReveal() {
   if (!revealOpen) return null
 
   const winner = winnerKey ? getRarity(winnerKey) : null
-  // Phones get smaller cubes and orb so the 10-box lineup and the prize
+  // Phones get smaller cubes and orb so the 7-box lineup and the prize
   // both fit a narrow viewport without clipping or overlap.
   const boxSize = isMobile ? 72 : 120
   const orbSize = isMobile ? 156 : 220
@@ -400,13 +400,6 @@ export default function BlindBoxReveal() {
                 >
                   Keep Digital
                 </button>
-                <button
-                  type="button"
-                  className={`btn btn--sm ${hasMore ? 'btn--line' : 'btn--gold'}`}
-                  onClick={() => setPhase('shipping')}
-                >
-                  Ship It to Me <span aria-hidden="true">→</span>
-                </button>
                 {hasMore && (
                   <button
                     type="button"
@@ -416,6 +409,13 @@ export default function BlindBoxReveal() {
                     Spin Again <span aria-hidden="true">→</span>
                   </button>
                 )}
+                <button
+                  type="button"
+                  className={`btn btn--sm ${hasMore ? 'btn--line' : 'btn--gold'}`}
+                  onClick={() => setPhase('shipping')}
+                >
+                  Ship It to Me <span aria-hidden="true">→</span>
+                </button>
               </div>
             </div>
           )}
