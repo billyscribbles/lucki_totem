@@ -1,0 +1,109 @@
+/* Whale tier card. Class names stay `.rarity*` — the markup moved here
+ * from the rarity lineup unchanged, only the root is now a link. */
+
+.rarity {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 28px 22px 26px;
+  border: 1px solid var(--r-glow);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(16, 20, 32, 0.6) 0%, rgba(8, 11, 20, 0.7) 100%);
+  overflow: hidden;
+  transition:
+    transform var(--t-hover),
+    border-color var(--t-hover),
+    box-shadow var(--t-hover);
+}
+.rarity:hover {
+  transform: translateY(-4px);
+  border-color: var(--r);
+  box-shadow: 0 24px 60px var(--r-glow);
+}
+
+/* Coloured halo bleeding down from above the card top. */
+.rarity__plate {
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  right: -20%;
+  height: 80%;
+  background: radial-gradient(ellipse at 50% 50%, var(--r-glow) 0%, transparent 65%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.rarity__head,
+.rarity__stage,
+.rarity__tagline,
+.rarity__odds {
+  position: relative;
+}
+
+.rarity__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.rarity__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--r);
+}
+.rarity__suit {
+  font-size: 14px;
+  color: var(--r);
+}
+
+/* Square image panel — the whale render fills it edge to edge. */
+.rarity__stage {
+  margin-bottom: 22px;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+}
+.rarity__whale {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rarity__tagline {
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+}
+.rarity__tagline span {
+  display: block;
+}
+
+.rarity__odds {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.rarity__odds strong {
+  font-weight: 500;
+  color: var(--r);
+}

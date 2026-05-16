@@ -1,0 +1,174 @@
+/* Whale detail page. `--r` / `--r-glow` are set on `.whale` per tier. */
+
+.whale__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color var(--t-hover);
+}
+.whale__back:hover {
+  color: var(--gold-hi);
+}
+
+.whale__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* ── Zoomed render ──────────────────────────────────────────────── */
+.whale__stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--r-glow);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(16, 20, 32, 0.6) 0%, rgba(8, 11, 20, 0.7) 100%);
+}
+.whale__halo {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 50% 42%, var(--r-glow) 0%, transparent 62%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.whale__img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Info column ────────────────────────────────────────────────── */
+.whale__info {
+  display: flex;
+  flex-direction: column;
+}
+.whale__tier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--r);
+}
+.whale__suit {
+  font-size: 16px;
+}
+.whale__name {
+  margin: 0 0 16px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  color: var(--ink);
+}
+.whale__tagline {
+  margin: 0 0 22px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  color: var(--ink-dim);
+}
+.whale__lore {
+  margin: 0 0 32px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+
+.whale__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.whale__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 16px;
+  background: var(--bg-soft);
+}
+.whale__stat dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.whale__stat dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--r);
+}
+
+/* ── Prev / next ────────────────────────────────────────────────── */
+.whale__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}
+.whale__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-dim);
+  transition: color var(--t-hover);
+}
+.whale__nav-link:hover {
+  color: var(--ink);
+}
+.whale__nav-link--next {
+  text-align: right;
+}
+.whale__nav-link span {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+}
+.whale__nav-link em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 860px) {
+  .whale__layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .whale__stage {
+    max-width: 420px;
+  }
+  .whale__back {
+    margin-bottom: 24px;
+  }
+}

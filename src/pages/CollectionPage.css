@@ -1,0 +1,140 @@
+/* The Lucki Collection page — intro block, then one section per series. */
+
+.collection__intro {
+  max-width: 640px;
+  margin-bottom: 56px;
+}
+.collection__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.collection__eyebrow span {
+  color: var(--gold);
+  font-size: 14px;
+}
+.collection__title {
+  margin: 0 0 16px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.collection__title-accent {
+  color: var(--gold);
+}
+.collection__sub {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+/* ── Per-collection section ─────────────────────────────────────── */
+.coll {
+  margin-top: 48px;
+}
+.coll:first-of-type {
+  margin-top: 0;
+}
+
+.coll__head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.coll__name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.coll__label {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-dim);
+}
+.coll__status {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.coll__status[data-status='live'] {
+  color: var(--rar-uncommon);
+}
+.coll__status[data-status='coming-soon'] {
+  color: var(--ink-mute);
+}
+
+/* Live series — same five-up grid as the home lineup. */
+.coll__row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+.coll__row > * {
+  display: flex;
+}
+
+/* Coming-soon series — the dashed placeholder. */
+.coll__soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 240px;
+  padding: 40px 24px;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.coll__soon-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.coll__soon-text {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  color: var(--ink-dim);
+}
+.coll__soon-sub {
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 760px) {
+  .collection__intro {
+    margin-bottom: 40px;
+  }
+  .coll__row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .coll__row {
+    grid-template-columns: 1fr;
+  }
+}
