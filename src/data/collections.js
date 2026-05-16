@@ -8,7 +8,7 @@ export const COLLECTIONS = [
     name: 'Series 01',
     label: 'The Origin Pod',
     status: 'live',
-    whales: ['common', 'uncommon', 'rare', 'ultra', 'legend'],
+    whales: ['common', 'uncommon', 'rare', 'rose', 'ultra', 'noir', 'legend'],
   },
   {
     id: 'series-02',

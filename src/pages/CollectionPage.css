@@ -84,11 +84,11 @@
   color: var(--ink-mute);
 }
 
-/* Live series — same five-up grid as the home lineup. */
+/* Live series — the full seven-up tier row. */
 .coll__row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
 }
 .coll__row > * {
   display: flex;

@@ -27,7 +27,9 @@ export const theme = {
     'rar-common': '#d4dbe5',
     'rar-uncommon': '#4ade80',
     'rar-rare': '#3b82f6',
+    'rar-rose': '#f472b6',
     'rar-ultra': '#ff6a3d',
+    'rar-noir': '#a78bfa',
     'rar-legend': '#f5c542',
   },
   fonts: {

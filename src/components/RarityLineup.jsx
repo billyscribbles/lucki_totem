@@ -4,7 +4,13 @@ import WhaleCard from './WhaleCard.jsx'
 import Reveal from './Reveal.jsx'
 import './RarityLineup.css'
 
-// The Lucki Lineup — all five tiers, each with its halo, whale and odds.
+// The home lineup showcases the chase tiers — the everyday Common and
+// Rare whales sit this one out so the rarer pulls (Rose, Noir, Ultra,
+// Legendary) carry the row. The full seven-tier set lives on /collection.
+const LINEUP_KEYS = ['uncommon', 'rose', 'ultra', 'noir', 'legend']
+const LINEUP = LINEUP_KEYS.map((key) => RARITIES.find((r) => r.key === key))
+
+// The Lucki Lineup — five showcase tiers, each with its halo, whale and odds.
 export default function RarityLineup() {
   return (
     <section className="container section" id="rarities">
@@ -15,7 +21,7 @@ export default function RarityLineup() {
         actionTo="/collection"
       />
       <div className="rarity-grid">
-        {RARITIES.map((rarity, i) => (
+        {LINEUP.map((rarity, i) => (
           <Reveal key={rarity.key} delay={i * 0.06}>
             <WhaleCard rarity={rarity} />
           </Reveal>
