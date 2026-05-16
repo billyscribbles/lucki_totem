@@ -1,15 +1,13 @@
 import { useEffect } from 'react'
-import { FEATURED, PROTECTORS } from '../data/products.js'
+import { PROTECTORS } from '../data/products.js'
 import SEO from '../lib/seo.jsx'
 import ProductCard from '../components/ProductCard.jsx'
 import Reveal from '../components/Reveal.jsx'
 import './ShopPage.css'
 
-// The Shop — everything LUCKI in one grid: blind boxes first, then the
-// standalone protectors. /protectors is the protectors-only cut of this.
-const ALL_PRODUCTS = [...FEATURED, ...PROTECTORS]
-
-export default function ShopPage() {
+// The Protector Shop — standalone card protectors only, no blind box.
+// Shares the .shop* layout with ShopPage; /shop is the everything cut.
+export default function ProtectorsPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }, [])
@@ -17,26 +15,26 @@ export default function ShopPage() {
   return (
     <main className="shop">
       <SEO
-        title="Shop"
-        description="Shop everything LUCKI — Series 01 blind boxes and standalone whale card protectors."
-        path="/shop"
+        title="Protectors"
+        description="Shop standalone LUCKI card protectors — pick the collectable you want, no blind box required."
+        path="/protectors"
       />
       <div className="container section">
         <header className="shop__intro">
           <p className="shop__eyebrow">
-            <span aria-hidden="true">♦</span> The Lucki Shop
+            <span aria-hidden="true">♦</span> The Protector Shop
           </p>
           <h1 className="shop__title">
-            Everything <span className="shop__title-accent">LUCKI.</span>
+            Pick your <span className="shop__title-accent">card protector.</span>
           </h1>
           <p className="shop__sub">
-            Blind boxes and standalone protectors, all in one place. Pull your
-            luck or pick the collectable you want.
+            Standalone acrylic collectables — no mystery, no blind box. Choose
+            the one you want and it ships straight to your table.
           </p>
         </header>
 
         <div className="product-grid">
-          {ALL_PRODUCTS.map((product, i) => (
+          {PROTECTORS.map((product, i) => (
             <Reveal key={product.id} delay={i * 0.06}>
               <ProductCard product={product} />
             </Reveal>

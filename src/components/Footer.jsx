@@ -1,15 +1,16 @@
+import { Link } from 'react-router-dom'
 import { site } from '../config/site.config.js'
 import './Footer.css'
 
 // Best-effort in-page targets for footer links on this single-scroll site.
 const LINK_TARGETS = {
-  'Blind Boxes': '#featured',
-  Protectors: '/shop',
-  Bundles: '#featured',
-  Apparel: '#featured',
-  'Rarity Guide': '#rarities',
-  'Collectors Club': '#protect',
-  'Drop Schedule': '#featured',
+  'Blind Boxes': '/blind-boxes',
+  Protectors: '/protectors',
+  Bundles: '/shop',
+  Apparel: '/shop',
+  'Rarity Guide': '/collection',
+  'Collectors Club': '/collection',
+  'Drop Schedule': '/collection',
   FAQ: '#footer',
   About: '#footer',
   Press: '#footer',
@@ -37,13 +38,22 @@ export default function Footer() {
             <nav key={col.title} className="footer__col" aria-label={col.title}>
               <h3 className="footer__col-title">{col.title}</h3>
               <ul className="footer__links">
-                {col.links.map((label) => (
-                  <li key={label}>
-                    <a className="footer__link" href={LINK_TARGETS[label] || '#top'}>
-                      {label}
-                    </a>
-                  </li>
-                ))}
+                {col.links.map((label) => {
+                  const target = LINK_TARGETS[label] || '#top'
+                  return (
+                    <li key={label}>
+                      {target.startsWith('#') ? (
+                        <a className="footer__link" href={target}>
+                          {label}
+                        </a>
+                      ) : (
+                        <Link className="footer__link" to={target}>
+                          {label}
+                        </Link>
+                      )}
+                    </li>
+                  )
+                })}
               </ul>
             </nav>
           ))}

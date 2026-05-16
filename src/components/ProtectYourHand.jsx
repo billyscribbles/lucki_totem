@@ -44,7 +44,7 @@ export default function ProtectYourHand() {
                 ))}
               </ul>
 
-              <Link className="btn btn--line btn--sm protect__cta" to="/shop">
+              <Link className="btn btn--line btn--sm protect__cta" to="/protectors">
                 Shop Protectors <span aria-hidden="true">→</span>
               </Link>
             </div>

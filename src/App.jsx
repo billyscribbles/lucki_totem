@@ -9,6 +9,8 @@ import InventoryDrawer from './components/InventoryDrawer.jsx'
 import Toast from './components/Toast.jsx'
 import Home from './pages/Home.jsx'
 import ShopPage from './pages/ShopPage.jsx'
+import BlindBoxPage from './pages/BlindBoxPage.jsx'
+import ProtectorsPage from './pages/ProtectorsPage.jsx'
 import CollectionPage from './pages/CollectionPage.jsx'
 import WhalePage from './pages/WhalePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
@@ -25,6 +27,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<ShopPage />} />
+          <Route path="/blind-boxes" element={<BlindBoxPage />} />
+          <Route path="/protectors" element={<ProtectorsPage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/whale/:key" element={<WhalePage />} />
           <Route path="*" element={<NotFoundPage />} />

@@ -2,11 +2,13 @@
 // the tier. `type` separates the blind-box loop ('box') from standalone
 // card protectors ('protector') — checkout branches on it.
 // `packSize` is how many sealed boxes a blind-box purchase yields.
+// `series` references a collections.js id so /blind-boxes can group them.
 
 export const FEATURED = [
   {
     id: 'blind-box-s01',
     type: 'box',
+    series: 'series-01',
     tag: 'New',
     tagColor: '#d4dbe5',
     name: 'Lucki Blind Box',
@@ -19,6 +21,7 @@ export const FEATURED = [
   {
     id: 'blind-box-3pack',
     type: 'box',
+    series: 'series-01',
     tag: '3-Pack',
     tagColor: '#3b82f6',
     name: 'Blind Box 3-Pack',
@@ -31,6 +34,7 @@ export const FEATURED = [
   {
     id: 'blind-box-5pack',
     type: 'box',
+    series: 'series-01',
     tag: '5-Pack',
     tagColor: '#f5c542',
     name: 'Blind Box 5-Pack',
@@ -43,6 +47,7 @@ export const FEATURED = [
   {
     id: 'blind-box-megabox',
     type: 'box',
+    series: 'series-01',
     tag: 'Mega Box',
     tagColor: '#c77dff',
     name: 'Blind Box Mega Box',
@@ -54,73 +59,109 @@ export const FEATURED = [
   },
 ]
 
-// Standalone card protectors — no mystery, pick the whale you want.
-// Sold directly through the /shop page; they skip the unboxing reveal.
+// Standalone card protectors — no mystery, pick the collectable you want.
+// Sold directly through /shop and /protectors; they skip the unboxing
+// reveal. No `image` — artwork isn't ready, so ProductCard shows a
+// coming-soon placeholder.
 export const PROTECTORS = [
   {
-    id: 'protector-pale',
+    id: 'protector-monkey',
     type: 'protector',
-    tag: 'Acrylic',
+    tag: 'New',
     tagColor: '#d4dbe5',
-    name: 'Pale Whale Protector',
+    name: 'Monkey Protector',
     sub: 'Weighted acrylic · clear-read finish',
     price: 24.0,
     orb: 'common',
-    image: '/whale/common.png',
   },
   {
-    id: 'protector-clover',
+    id: 'protector-fish',
     type: 'protector',
     tag: 'Best Seller',
     tagColor: '#4ade80',
-    name: 'Clover Whale Protector',
+    name: 'Fish Protector',
     sub: 'Weighted acrylic · emerald cast',
     price: 26.0,
     orb: 'uncommon',
-    image: '/whale/uncommon.png',
   },
   {
-    id: 'protector-flow',
+    id: 'protector-cat',
     type: 'protector',
     tag: 'Acrylic',
     tagColor: '#3b82f6',
-    name: 'Flow Whale Protector',
+    name: 'Cat Protector',
     sub: 'Weighted acrylic · sapphire cast',
     price: 28.0,
     orb: 'rare',
-    image: '/whale/rare.png',
   },
   {
-    id: 'protector-ember',
+    id: 'protector-fox',
     type: 'protector',
     tag: 'Acrylic',
     tagColor: '#ff6a3d',
-    name: 'Ember Whale Protector',
+    name: 'Fox Protector',
     sub: 'Weighted acrylic · molten cast',
-    price: 32.0,
+    price: 30.0,
     orb: 'ultra',
-    image: '/whale/ultra.png',
   },
   {
-    id: 'protector-crown',
+    id: 'protector-owl',
     type: 'protector',
     tag: 'Limited',
     tagColor: '#f5c542',
-    name: 'Crown Whale Protector',
+    name: 'Owl Protector',
     sub: 'Weighted acrylic · gilded edition',
-    price: 38.0,
+    price: 34.0,
     orb: 'legend',
-    image: '/whale/legend.png',
   },
   {
-    id: 'protector-noir',
+    id: 'protector-bear',
+    type: 'protector',
+    tag: 'Acrylic',
+    tagColor: '#d4dbe5',
+    name: 'Bear Protector',
+    sub: 'Weighted acrylic · clear-read finish',
+    price: 22.0,
+    orb: 'common',
+  },
+  {
+    id: 'protector-frog',
+    type: 'protector',
+    tag: 'Best Seller',
+    tagColor: '#4ade80',
+    name: 'Frog Protector',
+    sub: 'Weighted acrylic · emerald cast',
+    price: 25.0,
+    orb: 'uncommon',
+  },
+  {
+    id: 'protector-rabbit',
+    type: 'protector',
+    tag: 'Acrylic',
+    tagColor: '#3b82f6',
+    name: 'Rabbit Protector',
+    sub: 'Weighted acrylic · sapphire cast',
+    price: 27.0,
+    orb: 'rare',
+  },
+  {
+    id: 'protector-tiger',
+    type: 'protector',
+    tag: 'New',
+    tagColor: '#ff6a3d',
+    name: 'Tiger Protector',
+    sub: 'Weighted acrylic · molten cast',
+    price: 31.0,
+    orb: 'ultra',
+  },
+  {
+    id: 'protector-panda',
     type: 'protector',
     tag: 'Limited',
-    tagColor: '#a8a99f',
-    name: 'Noir Whale Protector',
-    sub: 'Weighted acrylic · midnight edition',
-    price: 36.0,
-    orb: 'rare',
-    image: '/whale/noir.png',
+    tagColor: '#f5c542',
+    name: 'Panda Protector',
+    sub: 'Weighted acrylic · gilded edition',
+    price: 33.0,
+    orb: 'legend',
   },
 ]

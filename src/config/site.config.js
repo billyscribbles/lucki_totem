@@ -9,13 +9,13 @@ export const site = {
     series: 'Series 01',
   },
 
-  // In-page anchors. `id`s live on the matching <section>s in Home.jsx.
+  // Route paths, except `#footer` which targets the app-level footer on
+  // every page. Navbar renders a router Link for paths, an <a> for anchors.
   nav: [
-    { label: 'Shop', href: '#featured' },
-    { label: 'Blind Boxes', href: '#featured' },
-    { label: 'Rarities', href: '#rarities' },
-    { label: 'Protectors', href: '#protect' },
-    { label: 'Collectors Club', href: '#protect' },
+    { label: 'Shop', href: '/shop' },
+    { label: 'Blind Boxes', href: '/blind-boxes' },
+    { label: 'Protectors', href: '/protectors' },
+    { label: 'Collectors Club', href: '/collection' },
     { label: 'About', href: '#footer' },
   ],
 

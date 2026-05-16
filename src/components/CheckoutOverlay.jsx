@@ -20,7 +20,12 @@ function formatExpiry(raw) {
   return `${digits.slice(0, 2)}/${digits.slice(2)}`
 }
 
+// Demo toggle: card-detail validation is disabled so any (or empty)
+// card details go through. Flip back to `false` to require real input.
+const SKIP_CARD_VALIDATION = true
+
 function validateCard(card) {
+  if (SKIP_CARD_VALIDATION) return {}
   const errs = {}
   const digits = card.number.replace(/\s/g, '')
   if (digits.length < 13 || digits.length > 19) {

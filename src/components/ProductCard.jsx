@@ -1,12 +1,12 @@
-import { Plus } from 'lucide-react'
+import { Plus, ImageOff } from 'lucide-react'
 import { getRarity } from '../data/rarities.js'
 import { useLucki } from '../store/LuckiContext.jsx'
-import WhaleOrb from './WhaleOrb.jsx'
 import './ProductCard.css'
 
 // One purchasable card — shared by the Featured Collection (blind boxes)
 // and the /shop page (standalone protectors). `orb` keys the card glow
-// to a rarity tier; `image` falls back to a rendered orb when absent.
+// to a rarity tier; products without an `image` show a coming-soon
+// placeholder (the protectors have no artwork yet).
 export default function ProductCard({ product }) {
   const { addToCart } = useLucki()
   const rarity = getRarity(product.orb)
@@ -29,7 +29,10 @@ export default function ProductCard({ product }) {
             loading="lazy"
           />
         ) : (
-          <WhaleOrb rarity={product.orb} animated={false} />
+          <div className="product__placeholder">
+            <ImageOff size={26} strokeWidth={1.5} aria-hidden="true" />
+            <span>Image coming soon</span>
+          </div>
         )}
       </div>
 

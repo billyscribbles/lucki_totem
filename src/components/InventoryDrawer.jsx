@@ -10,6 +10,7 @@ export default function InventoryDrawer() {
   const { drawer, closeDrawer, purchases, collection, openReveal } = useLucki()
   const open = drawer === 'inventory'
   const isEmpty = purchases.length === 0 && collection.length === 0
+  const sealedTotal = purchases.reduce((sum, g) => sum + g.remaining, 0)
 
   return (
     <Drawer open={open} onClose={closeDrawer} title="Your Inventory">
@@ -23,28 +24,34 @@ export default function InventoryDrawer() {
         </div>
       ) : (
         <div className="inv">
-          {purchases.length > 0 && (
+          {sealedTotal > 0 && (
             <section className="inv__section">
               <p className="inv__heading">Sealed Boxes</p>
-              {purchases.map((group) => (
-                <div className="seal-card" key={group.id}>
-                  <div className="seal-card__top">
-                    <WhaleOrb rarity={group.orb} size={50} animated={false} />
-                    <span className="seal-card__info">
-                      <span className="seal-card__name">{group.name}</span>
-                      <span className="seal-card__sub">{group.sub}</span>
-                    </span>
-                    <span className="seal-card__count">×{group.remaining}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="btn btn--gold btn--block btn--sm"
-                    onClick={() => openReveal(group.id)}
-                  >
-                    Open Box <span aria-hidden="true">→</span>
-                  </button>
+              {/* Every pack — single, 3-pack, Mega Box — is the same
+                  Series 01 blind box, so they pool into one stack.
+                  A Mega Box just adds 8 boxes to the count. */}
+              <div className="seal-card">
+                <div className="seal-card__top">
+                  <img
+                    className="seal-card__img"
+                    src="/images/blind-box.png"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span className="seal-card__info">
+                    <span className="seal-card__name">Lucki Blind Box</span>
+                    <span className="seal-card__sub">Series 01 · sealed</span>
+                  </span>
+                  <span className="seal-card__count">×{sealedTotal}</span>
                 </div>
-              ))}
+                <button
+                  type="button"
+                  className="btn btn--gold btn--block btn--sm"
+                  onClick={() => openReveal(purchases[0].id)}
+                >
+                  Open Box <span aria-hidden="true">→</span>
+                </button>
+              </div>
             </section>
           )}
 

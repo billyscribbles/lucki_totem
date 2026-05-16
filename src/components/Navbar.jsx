@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { Gem, ShoppingBag } from 'lucide-react'
 import { site } from '../config/site.config.js'
 import { useLucki } from '../store/LuckiContext.jsx'
@@ -27,16 +28,22 @@ export default function Navbar() {
   return (
     <header className="nav" ref={headerRef}>
       <div className="container nav__inner">
-        <a className="nav__wordmark" href="#top" aria-label="LUCKI, back to top">
+        <Link className="nav__wordmark" to="/" aria-label="LUCKI, home">
           <img className="nav__logo" src="/brand/logo-wordmark.png" alt="LUCKI" />
-        </a>
+        </Link>
 
         <nav className="nav__links" aria-label="Primary">
-          {site.nav.map((item, i) => (
-            <a key={`${item.label}-${i}`} className="nav__link" href={item.href}>
-              {item.label}
-            </a>
-          ))}
+          {site.nav.map((item, i) =>
+            item.href.startsWith('#') ? (
+              <a key={`${item.label}-${i}`} className="nav__link" href={item.href}>
+                {item.label}
+              </a>
+            ) : (
+              <Link key={`${item.label}-${i}`} className="nav__link" to={item.href}>
+                {item.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="nav__actions">

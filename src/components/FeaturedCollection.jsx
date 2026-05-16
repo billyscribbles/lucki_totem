@@ -11,6 +11,7 @@ export default function FeaturedCollection() {
         eyebrow="Featured Collection"
         ornament="✦"
         action="View all products →"
+        actionTo="/shop"
       />
       <div className="product-grid">
         {FEATURED.map((product, i) => (
