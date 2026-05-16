@@ -144,9 +144,10 @@ export function LuckiProvider({ children }) {
   }, [])
 
   // Records one opened whale into the collection and decrements the
-  // sealed box group it came from (dropping the group at zero).
-  // `shipping` marks physical fulfilment; `shippingDetails` carries the
-  // address when the collector chose to ship.
+  // sealed box stack. Every pack pools into one Series 01 stack, so a
+  // pull just draws down the first group with boxes left (dropping the
+  // group at zero). `shipping` marks physical fulfilment;
+  // `shippingDetails` carries the address when the collector chose to ship.
   const collect = useCallback(
     (rarityKey, { shipping, shippingDetails = null }) => {
       const rarity = getRarity(rarityKey)
@@ -160,13 +161,13 @@ export function LuckiProvider({ children }) {
         shippingDetails,
       }
       setCollection((inv) => [item, ...inv])
-      setPurchases((p) =>
-        p
-          .map((g) =>
-            g.id === revealBoxId ? { ...g, remaining: g.remaining - 1 } : g,
-          )
-          .filter((g) => g.remaining > 0),
-      )
+      setPurchases((p) => {
+        const idx = p.findIndex((g) => g.remaining > 0)
+        if (idx === -1) return p
+        return p
+          .map((g, i) => (i === idx ? { ...g, remaining: g.remaining - 1 } : g))
+          .filter((g) => g.remaining > 0)
+      })
       if (shipping) {
         showToast(`Shipping the ${rarity.whale} to you`)
       } else {
@@ -174,7 +175,7 @@ export function LuckiProvider({ children }) {
       }
       return item
     },
-    [revealBoxId, showToast],
+    [showToast],
   )
 
   const sealedCount = purchases.reduce((sum, g) => sum + g.remaining, 0)

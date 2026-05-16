@@ -125,7 +125,7 @@ export default function BlindBoxReveal() {
   const [winnerKey, setWinnerKey] = useState(null)
   const [winnerIdx, setWinnerIdx] = useState(-1)
   const [serial, setSerial] = useState(null)
-  const [group, setGroup] = useState(null) // { packSize, startRemaining }
+  const [group, setGroup] = useState(null) // { startRemaining } — pooled run length
   const [openedCount, setOpenedCount] = useState(0)
   const isMobile = useIsMobile()
   const navigate = useNavigate()
@@ -175,12 +175,11 @@ export default function BlindBoxReveal() {
       setOpenedCount(0)
       return undefined
     }
-    const g = purchasesRef.current.find((x) => x.id === revealBoxId)
-    setGroup(
-      g
-        ? { packSize: g.packSize, startRemaining: g.remaining }
-        : { packSize: 1, startRemaining: 1 },
-    )
+    // The run spans every sealed box the collector owns — packs pool
+    // into one Series 01 stack — so the counter and Spin Again walk the
+    // whole pool, not just the group whose "Open Box" button was hit.
+    const sealed = purchasesRef.current.reduce((sum, g) => sum + g.remaining, 0)
+    setGroup({ startRemaining: Math.max(sealed, 1) })
     setOpenedCount(0)
     startBox()
     return clearTimers
