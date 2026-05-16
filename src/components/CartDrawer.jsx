@@ -1,7 +1,6 @@
-import { ShoppingBag } from 'lucide-react'
+import { ShoppingBag, ImageOff } from 'lucide-react'
 import { useLucki } from '../store/LuckiContext.jsx'
 import Drawer from './Drawer.jsx'
-import WhaleOrb from './WhaleOrb.jsx'
 
 // Cart panel. Checkout now hands off to the payment overlay — there is
 // no longer a way to skip straight into the reveal.
@@ -25,7 +24,18 @@ export default function CartDrawer() {
           <div className="cart__items">
             {cart.map((item) => (
               <div className="cart-row" key={item.lineId}>
-                <WhaleOrb rarity={item.orb} size={50} animated={false} />
+                <span className="cart-row__media">
+                  {item.image ? (
+                    <img
+                      className="cart-row__image"
+                      src={item.image}
+                      alt={item.name}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <ImageOff size={18} strokeWidth={1.5} aria-hidden="true" />
+                  )}
+                </span>
                 <span className="cart-row__info">
                   <span className="cart-row__name">{item.name}</span>
                   <span className="cart-row__sub">{item.sub}</span>
