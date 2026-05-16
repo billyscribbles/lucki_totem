@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useLucki } from '../store/LuckiContext.jsx'
+import { FEATURED } from '../data/products.js'
 import './Hero.css'
 
 const HEADLINE = ['Collect', 'Your', 'Luck']
@@ -39,7 +40,14 @@ function Sparkles({ count = 16 }) {
 // render, a left darken to anchor type, a vignette, then the copy and
 // floating chrome.
 export default function Hero() {
-  const { openReveal } = useLucki()
+  const { addToCart, openDrawer } = useLucki()
+
+  // Pay-first flow: the CTA can't open a box for free — it drops the
+  // Series 01 single box into the cart and opens checkout from there.
+  const startBuy = () => {
+    addToCart(FEATURED[0])
+    openDrawer('cart')
+  }
 
   return (
     <section className="hero" id="top">
@@ -83,8 +91,8 @@ export default function Hero() {
           </p>
 
           <div className="hero__ctas hero__rise" style={{ '--d': '280ms' }}>
-            <button type="button" className="btn btn--gold hero__cta" onClick={openReveal}>
-              Open a Blind Box <span aria-hidden="true">→</span>
+            <button type="button" className="btn btn--gold hero__cta" onClick={startBuy}>
+              Get a Blind Box <span aria-hidden="true">→</span>
             </button>
             <a className="btn btn--ghost hero__cta" href="#rarities">
               Explore Rarities
