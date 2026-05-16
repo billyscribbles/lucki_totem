@@ -95,9 +95,10 @@ function RevealSparkles() {
 // pull the collector keeps the whale digitally or ships it. Multi-pack
 // groups expose "Spin Again" until every box is opened.
 export default function BlindBoxReveal() {
-  const { revealOpen, revealBoxId, closeReveal, collect, purchases } = useLucki()
+  const { revealOpen, revealBoxId, closeReveal, collect, openDrawer, purchases } =
+    useLucki()
 
-  // idle | ready | spinning | suspense | opening | revealed | shipping | placed
+  // idle | ready | spinning | suspense | opening | revealed | shipping
   const [phase, setPhase] = useState('idle')
   const [boxes, setBoxes] = useState([])
   const [winnerKey, setWinnerKey] = useState(null)
@@ -105,7 +106,6 @@ export default function BlindBoxReveal() {
   const [serial, setSerial] = useState(null)
   const [group, setGroup] = useState(null) // { packSize, startRemaining }
   const [openedCount, setOpenedCount] = useState(0)
-  const [shipped, setShipped] = useState(false) // how the last box was placed
 
   const timers = useRef([])
   const modalRef = useRef(null)
@@ -150,7 +150,6 @@ export default function BlindBoxReveal() {
       setSerial(null)
       setGroup(null)
       setOpenedCount(0)
-      setShipped(false)
       return undefined
     }
     const g = purchasesRef.current.find((x) => x.id === revealBoxId)
@@ -185,18 +184,32 @@ export default function BlindBoxReveal() {
     setPhase('spinning')
   }, [phase, boxes, winnerIdx])
 
-  // Place the just-pulled whale into the collection, then move to the
-  // post-box screen.
-  const placeWhale = useCallback(
-    (shipping, shippingDetails) => {
+  // Keep the pulled whale as a digital collectible, then exit to the
+  // inventory drawer — the reveal flow ends here.
+  const keepDigital = useCallback(() => {
+    if (!winnerKey) return
+    collect(winnerKey, { shipping: false })
+    openDrawer('inventory')
+    closeReveal()
+  }, [winnerKey, collect, openDrawer, closeReveal])
+
+  // Submit shipping details for a physical whale, then close the reveal.
+  const shipWhale = useCallback(
+    (shippingDetails) => {
       if (!winnerKey) return
-      collect(winnerKey, { shipping, shippingDetails })
-      setShipped(shipping)
-      setOpenedCount((n) => n + 1)
-      setPhase('placed')
+      collect(winnerKey, { shipping: true, shippingDetails })
+      closeReveal()
     },
-    [winnerKey, collect],
+    [winnerKey, collect, closeReveal],
   )
+
+  // Keep this whale digitally and immediately draw the next box in the run.
+  const spinAgain = useCallback(() => {
+    if (!winnerKey) return
+    collect(winnerKey, { shipping: false })
+    setOpenedCount((n) => n + 1)
+    startBox()
+  }, [winnerKey, collect, startBox])
 
   // Focus management: trap Tab inside the dialog, close on Escape.
   useEffect(() => {
@@ -229,7 +242,7 @@ export default function BlindBoxReveal() {
   // Move focus to the primary action as the flow advances.
   useEffect(() => {
     if (phase === 'ready') spinRef.current?.focus()
-    else if (phase === 'revealed' || phase === 'placed') actionRef.current?.focus()
+    else if (phase === 'revealed') actionRef.current?.focus()
   }, [phase])
 
   if (!revealOpen) return null
@@ -243,20 +256,20 @@ export default function BlindBoxReveal() {
     phase === 'opening'
   const stageStyle = winner ? { '--r': winner.color, '--r-glow': winner.glow } : undefined
 
-  const packSize = group?.packSize || 1
   const startRemaining = group?.startRemaining || 1
-  const boxNumber = Math.min(packSize - startRemaining + openedCount + 1, packSize)
-  const hasMore = openedCount < startRemaining // more boxes left to open
+  // Boxes still sealed in this run, not counting the one on screen now.
+  const boxesLeft = Math.max(startRemaining - openedCount - 1, 0)
+  const hasMore = boxesLeft > 0
+  const counterLabel = hasMore
+    ? `${boxesLeft} ${boxesLeft === 1 ? 'box' : 'boxes'} left`
+    : 'Last box'
 
-  const boxLabel = packSize > 1 ? `Box ${boxNumber} of ${packSize} · ` : ''
-  let status = `${boxLabel}Lucki Blind Box Series 01`
-  if (phase === 'ready') status = `${boxLabel}Tap spin to draw your whale`
+  let status = 'Lucki Blind Box Series 01'
+  if (phase === 'ready') status = 'Tap spin to draw your whale'
   else if (phase === 'spinning') status = `Drawing from the deck · ${remaining} remain`
   else if (phase === 'suspense') status = 'Your luck is sealed'
   else if (phase === 'revealed' && winner) status = `${winner.label} pulled`
   else if (phase === 'shipping') status = 'Shipping details'
-  else if (phase === 'placed')
-    status = hasMore ? `${boxLabel}Box opened` : 'All boxes opened'
 
   return (
     <div
@@ -347,7 +360,7 @@ export default function BlindBoxReveal() {
               <button
                 type="button"
                 className="btn btn--line btn--sm"
-                onClick={() => placeWhale(false, null)}
+                onClick={keepDigital}
                 ref={actionRef}
               >
                 Keep Digital
@@ -359,6 +372,15 @@ export default function BlindBoxReveal() {
               >
                 Ship It to Me <span aria-hidden="true">→</span>
               </button>
+              {hasMore && (
+                <button
+                  type="button"
+                  className="btn btn--line btn--sm"
+                  onClick={spinAgain}
+                >
+                  Spin Again <span aria-hidden="true">→</span>
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -369,43 +391,9 @@ export default function BlindBoxReveal() {
               {winner.label} · {winner.whale}
             </p>
             <ShippingForm
-              onSubmit={(details) => placeWhale(true, details)}
+              onSubmit={shipWhale}
               onBack={() => setPhase('revealed')}
             />
-          </div>
-        )}
-
-        {phase === 'placed' && winner && (
-          <div className="reveal__placed">
-            <div className="reveal__placed-orb">
-              <WhaleOrb rarity={winner.key} size={120} animated={false} />
-            </div>
-            <p className="reveal__placed-msg">
-              {shipped
-                ? `${winner.whale} is on its way to you.`
-                : `${winner.whale} added to your collection.`}
-            </p>
-            <div className="reveal__actions">
-              {hasMore ? (
-                <button
-                  type="button"
-                  className="btn btn--gold btn--sm"
-                  onClick={startBox}
-                  ref={actionRef}
-                >
-                  Spin Again <span aria-hidden="true">→</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn--gold btn--sm"
-                  onClick={closeReveal}
-                  ref={actionRef}
-                >
-                  Done
-                </button>
-              )}
-            </div>
           </div>
         )}
       </div>
