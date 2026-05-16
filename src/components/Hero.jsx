@@ -112,7 +112,6 @@ export default function Hero() {
       </div>
 
       <div className="hero__tag hero__tag--card" aria-hidden="true">
-        <span className="hero__legendary-orb" />
         <span className="hero__tag-label">
           <span className="hero__tag-eyebrow">Legendary Pull</span>
           <span className="hero__tag-value">2% Odds</span>
