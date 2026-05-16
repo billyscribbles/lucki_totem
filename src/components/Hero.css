@@ -344,7 +344,10 @@
     padding-bottom: 120px;
   }
   .hero__image {
+    /* Stay zoomed-in on phones: anchored centre, wider than the
+       viewport so the whale render reads large instead of shrinking. */
     left: 50%;
+    width: 165vw;
     opacity: 0.7;
   }
   .hero__tag--top {
