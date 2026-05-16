@@ -32,4 +32,14 @@ export const FEATURED = [
     orb: 'legend',
     image: '/images/blind-box-5pack.png',
   },
+  {
+    id: 'blind-box-megabox',
+    tag: 'Mega Box',
+    tagColor: '#c77dff',
+    name: 'Blind Box Mega Box',
+    sub: 'Eight Series 01 boxes · the full case',
+    price: 129.99,
+    orb: 'ultra',
+    image: '/images/blind-box-megabox.png',
+  },
 ]
