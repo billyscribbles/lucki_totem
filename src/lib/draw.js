@@ -1,14 +1,11 @@
 import { RARITIES } from '../data/rarities.js'
 
-// The 10 boxes shown in the reveal, ordered common → rarest (left to
-// right on the stage). Common-heavy, one of each scarce tier. The
-// lineup is cosmetic; the winner is decided by pickWinner(). Keep this
-// in rarity order — BlindBoxReveal renders it as-is.
+// The 7 boxes shown in the reveal — one per rarity tier, ordered
+// common → rarest (left to right on the stage). The lineup is
+// cosmetic; the winner is decided by pickWinner(). Keep this in
+// rarity order — BlindBoxReveal renders it as-is.
 export const BOX_LINEUP = [
   'common',
-  'common',
-  'common',
-  'uncommon',
   'uncommon',
   'rare',
   'rose',
@@ -63,16 +60,16 @@ export const SPIN_RAMP_MS = 1200 // wind-up: dead stop -> top speed
 export const SPIN_HOLD_MS = 500 // hold at top speed before the first poof
 export const SPIN_MAX_DPS = 1100 // top speed, degrees per second
 
-// Gaps (ms) between successive box poofs. Nine non-winners vanish; the
+// Gaps (ms) between successive box poofs. Six non-winners vanish; the
 // gaps widen steeply as the spin winds down — each whale that vanishes
 // slows the spin further, so the final pulls feel long, slow and tense.
 // The last value is the still pause held on the lone winner before the
 // suspense phase takes over.
-export const POOF_GAPS = [300, 340, 410, 500, 620, 780, 980, 1410, 900]
+export const POOF_GAPS = [500, 620, 780, 980, 1410, 900]
 
 // When the first box poofs (spin starts winding down) and when the spin
 // reaches a complete stop (one box left). The decay window is exactly
-// the span across which the nine non-winners vanish.
+// the span across which the six non-winners vanish.
 export const SPIN_DECAY_START_MS = SPIN_RAMP_MS + SPIN_HOLD_MS
 export const SPIN_DECAY_END_MS =
   SPIN_DECAY_START_MS + POOF_GAPS.slice(0, -1).reduce((sum, g) => sum + g, 0)
