@@ -115,8 +115,8 @@ export default function AboutPage() {
             <div className="about__split-media">
               <img
                 className="about__photo"
-                src="/images/blind-box.png"
-                alt="A sealed LUCKI blind box"
+                src="/images/about-whale.png"
+                alt="A gold crowned LUCKI whale resting on a stack of poker chips"
                 loading="lazy"
               />
             </div>
