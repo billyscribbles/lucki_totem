@@ -1,0 +1,270 @@
+/* Product detail page. `--r` / `--r-glow` are set on `.pdp` from the
+   product's rarity orb, so the stage glow matches the card it came from. */
+
+.pdp__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color var(--t-hover);
+}
+.pdp__back:hover {
+  color: var(--gold-hi);
+}
+
+.pdp__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* ── Packshot ───────────────────────────────────────────────────── */
+.pdp__stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--r-glow);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(16, 20, 32, 0.6) 0%, rgba(8, 11, 20, 0.7) 100%);
+}
+.pdp__halo {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 50% 46%, var(--r-glow) 0%, transparent 62%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+/* contain, not cover — packshots letterbox onto the wash rather than crop. */
+.pdp__img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.pdp__placeholder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  color: var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Info column ────────────────────────────────────────────────── */
+.pdp__info {
+  display: flex;
+  flex-direction: column;
+}
+.pdp__tag {
+  align-self: flex-start;
+  margin-bottom: 16px;
+  padding: 5px 11px;
+  border: 1px solid var(--tag);
+  border-radius: var(--radius-sm);
+  background: rgba(7, 9, 15, 0.6);
+  color: var(--tag);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.pdp__name {
+  margin: 0 0 12px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 4.4vw, 3.2rem);
+  line-height: 1.06;
+  color: var(--ink);
+}
+.pdp__sub {
+  margin: 0 0 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.pdp__blurb {
+  margin: 0 0 28px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+
+.pdp__buy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.pdp__price {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--gold-hi);
+}
+
+/* ── What's inside (blind boxes) ────────────────────────────────── */
+.pdp__panel {
+  margin-top: 28px;
+}
+.pdp__panel-title {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+.pdp__panel-note {
+  margin: 0 0 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.pdp__odds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.pdp__odd {
+  display: grid;
+  grid-template-columns: 22px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-soft);
+}
+.pdp__odd + .pdp__odd {
+  border-top: 1px solid var(--line-soft);
+}
+.pdp__odd-suit {
+  font-size: 15px;
+  color: var(--r);
+}
+.pdp__odd-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.pdp__odd-tier {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.pdp__odd-pct {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--r);
+}
+
+/* ── Specs (protectors) ─────────────────────────────────────────── */
+.pdp__specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 28px 0 0;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.pdp__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 16px;
+  background: var(--bg-soft);
+}
+.pdp__spec dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.pdp__spec dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 15px;
+  text-transform: capitalize;
+  color: var(--ink);
+}
+
+/* ── Prev / next ────────────────────────────────────────────────── */
+.pdp__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}
+.pdp__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-dim);
+  transition: color var(--t-hover);
+}
+.pdp__nav-link:hover {
+  color: var(--ink);
+}
+.pdp__nav-link--next {
+  text-align: right;
+}
+.pdp__nav-link span {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 16px;
+}
+.pdp__nav-link em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 860px) {
+  .pdp__layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .pdp__stage {
+    max-width: 420px;
+  }
+  .pdp__back {
+    margin-bottom: 24px;
+  }
+}

@@ -11,15 +11,17 @@ import Home from './pages/Home.jsx'
 import ShopPage from './pages/ShopPage.jsx'
 import BlindBoxPage from './pages/BlindBoxPage.jsx'
 import ProtectorsPage from './pages/ProtectorsPage.jsx'
+import ProductPage from './pages/ProductPage.jsx'
 import CollectionPage from './pages/CollectionPage.jsx'
 import WhalePage from './pages/WhalePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
 // LUCKI is a scroll-first site: Home carries every section. The router
-// also serves the collection page, per-whale detail pages and a real
-// 404. The cart, collection drawer, reveal and toast live at app level
-// so any section can open them through the store.
+// also serves the shop pages, per-product and per-whale detail pages,
+// the collection page and a real 404. The cart, collection drawer,
+// reveal and toast live at app level so any section can open them
+// through the store.
 export default function App() {
   return (
     <BrowserRouter>
@@ -30,6 +32,7 @@ export default function App() {
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/blind-boxes" element={<BlindBoxPage />} />
           <Route path="/protectors" element={<ProtectorsPage />} />
+          <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/whale/:key" element={<WhalePage />} />
           <Route path="/about" element={<AboutPage />} />
