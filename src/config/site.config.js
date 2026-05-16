@@ -16,7 +16,7 @@ export const site = {
     { label: 'Blind Boxes', href: '/blind-boxes' },
     { label: 'Protectors', href: '/protectors' },
     { label: 'Collectors Club', href: '/collection' },
-    { label: 'About', href: '#footer' },
+    { label: 'About', href: '/about' },
   ],
 
   footer: {

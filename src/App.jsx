@@ -13,6 +13,7 @@ import BlindBoxPage from './pages/BlindBoxPage.jsx'
 import ProtectorsPage from './pages/ProtectorsPage.jsx'
 import CollectionPage from './pages/CollectionPage.jsx'
 import WhalePage from './pages/WhalePage.jsx'
+import AboutPage from './pages/AboutPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
 // LUCKI is a scroll-first site: Home carries every section. The router
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/protectors" element={<ProtectorsPage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/whale/:key" element={<WhalePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Footer />

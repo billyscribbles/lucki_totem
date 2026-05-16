@@ -1,0 +1,237 @@
+/* About page — LUCKI's origin story. Editorial stack of story blocks,
+   reusing the protect-block panel motif for visual consistency. */
+
+.about__hero {
+  max-width: 720px;
+  margin-bottom: 72px;
+}
+.about__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.about__eyebrow span {
+  color: var(--gold);
+  font-size: 14px;
+}
+.about__title {
+  margin: 0 0 20px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.about__title-accent {
+  color: var(--gold);
+}
+.about__lede {
+  margin: 0;
+  max-width: 560px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+/* ── Story blocks ────────────────────────────────────────────────── */
+.about__block {
+  margin-bottom: 80px;
+}
+.about__heading {
+  margin: 0 0 24px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.about__heading--center {
+  text-align: center;
+}
+.about__prose {
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.about__prose p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+.about__prose--center {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ── The pull — copy beside a sealed box ─────────────────────────── */
+.about__split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+.about__split-copy {
+  min-width: 0;
+}
+.about__inline-cta {
+  margin-top: 28px;
+}
+.about__split-media {
+  position: relative;
+}
+.about__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* ── Poker-community panel — borrows the protect-block frame ─────── */
+.about__panel {
+  position: relative;
+  padding: 64px 56px;
+  margin-bottom: 80px;
+  border: 1px solid rgba(212, 179, 90, 0.25);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, rgba(212, 179, 90, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #0d111c 0%, #07090f 100%);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(212, 179, 90, 0.1);
+}
+.about__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.about__corner--tl {
+  top: 16px;
+  left: 16px;
+  border-top: 1px solid var(--gold);
+  border-left: 1px solid var(--gold);
+}
+.about__corner--tr {
+  top: 16px;
+  right: 16px;
+  border-top: 1px solid var(--gold);
+  border-right: 1px solid var(--gold);
+}
+.about__corner--bl {
+  bottom: 16px;
+  left: 16px;
+  border-bottom: 1px solid var(--gold);
+  border-left: 1px solid var(--gold);
+}
+.about__corner--br {
+  bottom: 16px;
+  right: 16px;
+  border-bottom: 1px solid var(--gold);
+  border-right: 1px solid var(--gold);
+}
+
+/* ── Values ──────────────────────────────────────────────────────── */
+.about__values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.about__value {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(13, 17, 28, 0.6);
+}
+.about__value-glyph {
+  margin-bottom: 10px;
+  font-size: 22px;
+  color: var(--gold);
+}
+.about__value-title {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+.about__value-sub {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-mute);
+}
+
+/* ── Closing CTA ─────────────────────────────────────────────────── */
+.about__cta {
+  text-align: center;
+  padding: 24px 0 8px;
+}
+.about__cta-title {
+  margin: 0 0 12px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  color: var(--ink);
+}
+.about__cta-sub {
+  margin: 0 0 32px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+.about__cta-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .about__split {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about__split-media {
+    order: -1;
+    max-width: 420px;
+  }
+}
+@media (max-width: 760px) {
+  .about__hero {
+    margin-bottom: 56px;
+  }
+  .about__block,
+  .about__split,
+  .about__panel {
+    margin-bottom: 56px;
+  }
+  .about__panel {
+    padding: 40px 24px;
+  }
+  .about__values {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
