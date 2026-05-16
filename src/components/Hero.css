@@ -331,9 +331,9 @@
     padding-top: 16px;
   }
   .hero__shell {
-    /* Reserve a band below the copy for the two floating tags so they
-       never sit on top of the headline or the trust row. */
-    padding-bottom: 156px;
+    /* Reserve a band below the copy for the card tag so it never sits
+       on top of the headline or the trust row. */
+    padding-bottom: 116px;
   }
   .hero__image {
     /* Show the render at its true proportions and just crop the left
@@ -363,11 +363,11 @@
       transparent 98%
     );
   }
-  /* On phones both tags drop into the reserved band below the copy,
-     stacked in the bottom-right corner so they never overlap text. */
+  /* The rarities pill stays pinned to the top-right corner — it must
+     never drop into the band below the copy. The card tag alone sits
+     in the reserved band so it never overlaps text. */
   .hero__tag--top {
-    top: auto;
-    bottom: 86px;
+    top: 20px;
     right: 16px;
   }
   .hero__tag--card {
@@ -380,5 +380,16 @@
   .hero__trust {
     flex-wrap: wrap;
     gap: 12px;
+  }
+}
+
+/* Phones: there's no room for the floating tags to sit without crowding
+   the copy, so drop them entirely and reclaim the reserved band. */
+@media (max-width: 760px) {
+  .hero__tag {
+    display: none;
+  }
+  .hero__shell {
+    padding-bottom: clamp(40px, 8vh, 96px);
   }
 }
