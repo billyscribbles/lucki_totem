@@ -1,0 +1,385 @@
+/* LUCKI — base layer.
+ * Design tokens (--gold, --display, --radius-md, ...) are injected onto
+ * :root by src/lib/applyTheme.js at boot. This file owns resets, the page
+ * wash, motion primitives, keyframes and shared utilities.
+ */
+
+/* ── Motion primitives ──────────────────────────────────────────────
+ * Strong custom curves. The built-in CSS easings are too weak to read
+ * as intentional. ease-out for entrances, ease-in-out for on-screen
+ * movement, the iOS drawer curve for panels.
+ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --t-press: 130ms var(--ease-out);
+  --t-hover: 220ms var(--ease-out);
+  --t-panel: 420ms var(--ease-drawer);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* anchored sections clear the 80px sticky nav */
+  scroll-padding-top: 96px;
+}
+
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1100px 700px at 80% -10%, rgba(212, 179, 90, 0.1), transparent 60%),
+    radial-gradient(900px 600px at 10% 110%, rgba(59, 130, 246, 0.06), transparent 60%),
+    linear-gradient(180deg, #07090f 0%, #050710 100%);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+ul,
+ol {
+  list-style: none;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--gold-ink);
+}
+
+/* One clear focus ring everywhere — gold, offset, never removed. */
+:focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Shared layout ──────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Standard vertical rhythm for a scroll section. */
+.section {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+@media (max-width: 760px) {
+  .section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+
+.lucki-mark {
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: 0.32em;
+  /* The wordmark is the brand's single deliberate gradient: a struck-gold
+     coin face. It is the logo, not decorative body text. */
+  background: linear-gradient(180deg, #f5d76e 0%, #d4af37 50%, #8b6914 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────
+ * One shared system. Used by the hero, cart, reveal and protect block,
+ * so press and hover behaviour stay identical everywhere.
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 18px 32px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    transform var(--t-press),
+    box-shadow var(--t-hover),
+    background-color var(--t-hover),
+    border-color var(--t-hover),
+    color var(--t-hover);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--gold {
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 50%, var(--gold-deep));
+  color: var(--gold-ink);
+  font-weight: 700;
+  box-shadow:
+    0 10px 40px rgba(212, 179, 90, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.btn--gold:hover {
+  box-shadow:
+    0 14px 48px rgba(212, 179, 90, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.btn--ghost {
+  background: rgba(7, 9, 15, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(212, 179, 90, 0.5);
+  color: var(--gold);
+}
+.btn--ghost:hover {
+  border-color: var(--gold-hi);
+  color: var(--gold-hi);
+  background: rgba(212, 179, 90, 0.08);
+}
+
+/* Outlined gold — fills on hover. Protect CTA, reveal keep, cart skip. */
+.btn--line {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn--line:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--gold-ink);
+}
+
+.btn--block {
+  width: 100%;
+}
+.btn--sm {
+  padding: 14px 24px;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────── */
+@keyframes orb-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+/* The winning cube's triumphant zoom — settled whale-front, it lunges
+ * toward the viewer, overshoots, then holds large for the reveal. */
+@keyframes cube-win {
+  0% {
+    transform: rotateX(-14deg) rotateY(0deg) scale(1);
+  }
+  55% {
+    transform: rotateX(-14deg) rotateY(0deg) scale(1.6);
+  }
+  100% {
+    transform: rotateX(-14deg) rotateY(0deg) scale(1.42);
+  }
+}
+/* Grey poof left behind by an eliminated box — rises, expands, fades. */
+@keyframes smoke-billow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -92%) scale(1.9);
+    opacity: 0;
+  }
+}
+/* Rarity-coloured embers shot through the smoke as a box poofs. */
+@keyframes ember-shoot {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2);
+    opacity: 0;
+  }
+}
+@keyframes rarity-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+@keyframes particle-fly {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2);
+    opacity: 0;
+  }
+}
+@keyframes aura-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(1.08);
+  }
+}
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes reveal-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes pulse-text {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes toast-in {
+  from {
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes scroll-line {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────
+ * Keep opacity fades that aid comprehension; drop looping motion and
+ * large positional movement. The reveal modal additionally skips its
+ * box choreography in JS.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 0 20px;
+  }
+}

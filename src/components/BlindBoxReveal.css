@@ -1,0 +1,240 @@
+.reveal-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: rgba(2, 4, 10, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: modal-fade-in 0.4s ease;
+}
+
+.reveal-modal__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 32px;
+  border-bottom: 1px solid rgba(212, 179, 90, 0.12);
+}
+.reveal-modal__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.reveal-modal__mark {
+  font-size: 18px;
+  letter-spacing: 0.25em;
+}
+.reveal-modal__status {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reveal-modal__close {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  transition:
+    color var(--t-hover),
+    border-color var(--t-hover),
+    transform var(--t-press);
+}
+.reveal-modal__close:hover {
+  color: var(--gold);
+  border-color: rgba(212, 179, 90, 0.5);
+}
+.reveal-modal__close:active {
+  transform: scale(0.96);
+}
+
+.reveal-modal__stage {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 32px;
+}
+
+.reveal__aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, var(--r-glow) 0%, transparent 55%);
+  opacity: 0.45;
+  pointer-events: none;
+  animation: aura-pulse 2.4s var(--ease-in-out) infinite;
+}
+
+/* ── Spinning lineup ─────────────────────────────────────────────── */
+.reveal__lineup {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 34px 52px;
+  max-width: 100%;
+}
+
+/* The pre-draw call to action — laid over the resting box lineup. */
+.reveal__spin {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.reveal__spin:active {
+  transform: translateX(-50%) scale(0.97);
+}
+
+.reveal__caption {
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.reveal__caption--sealed {
+  color: var(--r);
+  animation: pulse-text 0.8s ease-in-out infinite;
+}
+
+/* ── Prize ───────────────────────────────────────────────────────── */
+.reveal__prize {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: reveal-in 0.7s ease-out;
+}
+
+.reveal__particles,
+.reveal__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.reveal__particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background: var(--r);
+  box-shadow: 0 0 10px var(--r-glow);
+  transform: translate(-50%, -50%);
+  animation-name: particle-fly;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+.reveal__sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--r);
+  box-shadow: 0 0 8px var(--r), 0 0 14px var(--r);
+  animation-name: sparkle-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.reveal__tier,
+.reveal__tier-rule,
+.reveal__orb,
+.reveal__name,
+.reveal__quote,
+.reveal__serial,
+.reveal__actions {
+  position: relative;
+  z-index: 1;
+}
+
+.reveal__tier {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--r);
+  text-shadow: 0 0 16px var(--r-glow);
+}
+.reveal__tier-rule {
+  width: 60px;
+  height: 1px;
+  margin-bottom: 26px;
+  background: linear-gradient(90deg, transparent, var(--r), transparent);
+}
+.reveal__name {
+  margin: 28px 0 6px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 38px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 0 4px 24px var(--r-glow);
+}
+.reveal__quote {
+  margin: 0 0 8px;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+.reveal__serial {
+  margin: 0 0 36px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.reveal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .reveal-modal__status {
+    display: none;
+  }
+  .reveal-modal__stage {
+    padding: 20px 16px;
+  }
+  .reveal__lineup {
+    gap: 22px 28px;
+  }
+  .reveal__name {
+    font-size: 28px;
+  }
+  .reveal__orb {
+    transform: scale(0.82);
+  }
+}

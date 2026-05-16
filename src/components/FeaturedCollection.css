@@ -1,0 +1,139 @@
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+/* Reveal wraps each card; make the wrapper a transparent grid cell. */
+.product-grid > * {
+  display: flex;
+}
+
+.product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(16, 20, 32, 0.7) 0%, rgba(10, 13, 23, 0.7) 100%);
+  transition:
+    transform var(--t-hover),
+    border-color var(--t-hover),
+    box-shadow var(--t-hover);
+}
+.product:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 179, 90, 0.4);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.5),
+    0 0 26px var(--r-glow);
+}
+
+.product__tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 4px 10px;
+  border: 1px solid var(--tag);
+  border-radius: var(--radius-sm);
+  background: rgba(7, 9, 15, 0.6);
+  color: var(--tag);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.product__media {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: linear-gradient(180deg, #0a0d17 0%, #050710 100%);
+}
+/* The whale render fills the whole media box — no halo, no glow aura. */
+.product__media .orb {
+  width: 100%;
+  height: 100%;
+}
+.product__media .orb__halo {
+  display: none;
+}
+/* A product photo fills the whole media box, same as the whale render. */
+.product__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product__body {
+  margin-bottom: 16px;
+}
+.product__name {
+  margin: 0 0 4px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.product__sub {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-mute);
+}
+
+.product__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+}
+.product__price {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--gold-hi);
+}
+
+.product__add {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 179, 90, 0.4);
+  color: var(--gold);
+  transition:
+    background-color var(--t-hover),
+    color var(--t-hover),
+    transform var(--t-press),
+    border-color var(--t-hover);
+}
+.product__add:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--gold-ink);
+}
+.product__add:active {
+  transform: scale(0.9);
+}
+
+@media (max-width: 1100px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}

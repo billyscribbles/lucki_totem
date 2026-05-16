@@ -1,0 +1,22 @@
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  z-index: 1100;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 14px 22px;
+  border: 1px solid rgba(212, 179, 90, 0.4);
+  border-radius: 4px;
+  background: linear-gradient(180deg, #1a1f2e 0%, #0a0d17 100%);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(212, 179, 90, 0.2);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-align: center;
+  animation: toast-in 0.3s ease;
+}

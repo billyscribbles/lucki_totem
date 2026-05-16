@@ -1,0 +1,46 @@
+.orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  flex-shrink: 0;
+}
+.orb--bob {
+  animation: orb-bob 3.2s ease-in-out infinite;
+}
+
+/* Soft rarity-tinted halo behind the whale render. */
+.orb__halo {
+  position: absolute;
+  inset: -24%;
+  background: radial-gradient(circle at 50% 52%, var(--r-glow) 0%, transparent 62%);
+  filter: blur(10px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.orb__whale {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Renders are bright subjects on a near-black studio background. Two
+     passes drop the backing, the same way the hero whale image does:
+     `lighten` removes pixels darker than the card behind it, and a
+     radial mask dissolves the lit grey square that lighten can't reach.
+     A transparent-background PNG export would let both be removed. */
+  mix-blend-mode: lighten;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 48%,
+    #000 50%,
+    rgba(0, 0, 0, 0.55) 66%,
+    transparent 82%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 48%,
+    #000 50%,
+    rgba(0, 0, 0, 0.55) 66%,
+    transparent 82%
+  );
+}

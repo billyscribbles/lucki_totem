@@ -1,0 +1,247 @@
+/* MysteryBox — a 3D cube spinning on its Y axis. Side faces carry the
+ * rarity's whale; top + bottom are lid panels. The spin itself is
+ * driven by requestAnimationFrame in MysteryBox.jsx (writes the cube's
+ * transform directly); this file owns geometry, faces and the poof. */
+
+.mbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--box-size);
+  flex-shrink: 0;
+  transition:
+    transform 0.5s var(--ease-out),
+    filter 0.5s ease;
+}
+
+/* ── Aura + ground shadow ──────────────────────────────────────────── */
+.mbox__glow {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--box-size) * 0.5);
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--r-glow), transparent 68%);
+  filter: blur(10px);
+  opacity: 0.5;
+  z-index: 0;
+  transition: opacity 0.4s ease;
+}
+.mbox__pedestal {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--box-size) - 2px);
+  width: 78%;
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.72), transparent 72%);
+  box-shadow: 0 0 30px var(--r-glow);
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* ── 3D cube ───────────────────────────────────────────────────────── */
+.mbox__scene {
+  position: relative;
+  z-index: 1;
+  width: var(--box-size);
+  height: var(--box-size);
+  perspective: 640px;
+}
+
+.mbox__cube {
+  position: relative;
+  width: var(--box-size);
+  height: var(--box-size);
+  transform-style: preserve-3d;
+  transform: rotateX(-14deg) rotateY(0deg);
+  will-change: transform;
+}
+
+.mbox__face {
+  position: absolute;
+  width: var(--box-size);
+  height: var(--box-size);
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+.mbox__face--front {
+  transform: rotateY(0deg) translateZ(calc(var(--box-size) / 2));
+}
+.mbox__face--back {
+  transform: rotateY(180deg) translateZ(calc(var(--box-size) / 2));
+}
+.mbox__face--right {
+  transform: rotateY(90deg) translateZ(calc(var(--box-size) / 2));
+}
+.mbox__face--left {
+  transform: rotateY(-90deg) translateZ(calc(var(--box-size) / 2));
+}
+.mbox__face--top {
+  transform: rotateX(90deg) translateZ(calc(var(--box-size) / 2));
+}
+.mbox__face--bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--box-size) / 2));
+}
+
+/* Whale faces — the four sides. */
+.mbox__face--side {
+  border: 1px solid var(--r);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 42%),
+    linear-gradient(180deg, #1a1f33 0%, #090c15 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -10px 26px rgba(0, 0, 0, 0.55),
+    0 0 16px var(--r-glow);
+}
+.mbox__whale {
+  width: 84%;
+  height: 84%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 10px var(--r-glow));
+  user-select: none;
+}
+
+/* Lid panels — top + bottom. */
+.mbox__face--lid {
+  border: 1px solid var(--r);
+  background: linear-gradient(180deg, #20253a 0%, #0c0f1a 100%);
+  box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.6);
+}
+.mbox__lid-mark {
+  font-size: calc(var(--box-size) * 0.26);
+  line-height: 1;
+  color: var(--r);
+  opacity: 0.5;
+  text-shadow: 0 0 14px var(--r-glow);
+}
+
+/* ── Rarity label (stays upright, below the cube) ──────────────────── */
+.mbox__label {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: calc(var(--box-size) * 0.115);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--r);
+  text-shadow: 0 0 8px var(--r-glow);
+  transition: opacity 0.3s ease;
+}
+
+/* ── Spinning state ────────────────────────────────────────────────── */
+.mbox.is-spinning {
+  z-index: 1;
+}
+
+/* ── Winner spotlight (suspense phase) ─────────────────────────────── */
+.mbox.is-spotlight {
+  transform: scale(1.16);
+  filter: drop-shadow(0 0 36px var(--r-glow));
+  z-index: 2;
+}
+.mbox.is-spotlight .mbox__glow {
+  opacity: 1;
+}
+
+/* ── Winner opening — the triumphant zoom ──────────────────────────── */
+.mbox.is-opening {
+  z-index: 3;
+}
+.mbox.is-opening .mbox__cube {
+  animation: cube-win 0.9s var(--ease-out) forwards;
+}
+.mbox.is-opening .mbox__glow {
+  opacity: 1;
+  filter: blur(16px);
+}
+
+.mbox__flash {
+  position: absolute;
+  inset: -34%;
+  z-index: 2;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--r) 0%,
+    var(--r-glow) 32%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: rarity-flash 0.9s ease-out forwards;
+}
+
+/* ── Vanished — fade the cube out gently while the smoke takes over ── */
+.mbox.is-vanished .mbox__scene {
+  opacity: 0;
+  transform: scale(0.55);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.mbox.is-vanished .mbox__glow,
+.mbox.is-vanished .mbox__pedestal,
+.mbox.is-vanished .mbox__label {
+  opacity: 0;
+}
+
+/* ── Poof: grey smoke + rarity embers ──────────────────────────────── */
+.mbox__smoke {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--box-size) * 0.5);
+  width: 0;
+  height: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.mbox__smoke-puff {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(222, 226, 234, 0.78),
+    rgba(150, 156, 168, 0.34) 46%,
+    transparent 72%
+  );
+  filter: blur(7px);
+  transform: translate(-50%, -50%);
+  animation-name: smoke-billow;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+.mbox__ember {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background: var(--r);
+  box-shadow:
+    0 0 8px var(--r-glow),
+    0 0 4px var(--r);
+  transform: translate(-50%, -50%);
+  animation-name: ember-shoot;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+/* ── Reduced motion — hold the cube still, drop the zoom ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mbox__cube {
+    transform: rotateX(-14deg) rotateY(0deg) !important;
+  }
+  .mbox.is-opening .mbox__cube {
+    animation: none;
+  }
+}

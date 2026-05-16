@@ -1,0 +1,371 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  /* Lock the hero to exactly one screen below the sticky nav so the
+     headline, CTAs and "Scroll" cue always sit inside the viewport.
+     --nav-h is measured live by Navbar; 109px is the first-paint fallback.
+     svh keeps it honest under mobile browser chrome. */
+  height: calc(100vh - var(--nav-h, 109px));
+  height: calc(100svh - var(--nav-h, 109px));
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Layer 0 — deep base wash */
+.hero__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 65% 50%, rgba(212, 179, 90, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 25% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #060810 0%, #04060d 100%);
+}
+
+/* Layer 1 — blended whale render */
+.hero__image-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.hero__image {
+  position: absolute;
+  top: 50%;
+  left: 58%;
+  width: min(1500px, 95vw);
+  transform: translate(-50%, -50%);
+  /* Lighten blend drops the render's black background into the page;
+     the radial mask dissolves the remaining edges. */
+  mix-blend-mode: lighten;
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 50%,
+    #000 30%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.3) 80%,
+    transparent 95%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 70% at 50% 50%,
+    #000 30%,
+    rgba(0, 0, 0, 0.85) 55%,
+    rgba(0, 0, 0, 0.3) 80%,
+    transparent 95%
+  );
+  filter: saturate(1.05) contrast(1.05);
+  pointer-events: none;
+}
+.hero__bloom {
+  position: absolute;
+  top: 50%;
+  left: 58%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 50% 50%, rgba(212, 179, 90, 0.18) 0%, transparent 55%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Layer 2 — left darken anchors the type */
+.hero__darken {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 6, 13, 0.92) 0%,
+      rgba(4, 6, 13, 0.78) 24%,
+      rgba(4, 6, 13, 0.4) 44%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, transparent 65%, rgba(4, 6, 13, 0.7) 90%, rgba(4, 6, 13, 1) 100%);
+  pointer-events: none;
+}
+
+/* Layer 3 — vignette */
+.hero__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+/* Layer 4 — copy */
+.hero__shell {
+  position: relative;
+  z-index: 4;
+  /* Viewport-height-aware so the shell shrinks on short screens. */
+  padding-top: clamp(20px, 4vh, 64px);
+  padding-bottom: clamp(40px, 8vh, 96px);
+}
+.hero__copy {
+  max-width: 620px;
+}
+
+.hero__rise {
+  opacity: 0;
+  animation: rise-in 600ms var(--ease-out) var(--d, 0ms) forwards;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: clamp(14px, 2.6vh, 28px);
+  padding: 6px 12px;
+  border: 1px solid rgba(212, 179, 90, 0.35);
+  border-radius: var(--radius-sm);
+  background: rgba(7, 9, 15, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero__headline {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  /* Capped by both width and viewport height so three stacked words
+     always clear the fold, even on short laptops. */
+  font-size: clamp(40px, min(8.6vw, 11vh), 128px);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.6);
+}
+.hero__word {
+  display: block;
+}
+.hero__word--accent {
+  font-style: italic;
+  background: linear-gradient(180deg, #fff4c2 0%, #f5d76e 28%, #d4af37 60%, #8b6914 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold-hi);
+}
+
+.hero__divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: clamp(16px, 3.4vh, 36px) 0 clamp(12px, 2.4vh, 26px);
+}
+.hero__rule {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.hero__pip {
+  color: var(--gold);
+  font-size: 14px;
+}
+
+.hero__lede {
+  max-width: 460px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: clamp(20px, 4.2vh, 44px);
+}
+
+.hero__trust {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: clamp(20px, 4.8vh, 52px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.hero__trust strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.hero__stars {
+  color: var(--gold);
+  letter-spacing: 0.2em;
+}
+.hero__trust-rule {
+  width: 1px;
+  height: 14px;
+  background: var(--line);
+}
+
+/* Layer 5 — floating chrome */
+.hero__tag {
+  position: absolute;
+  z-index: 5;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+  border: 1px solid rgba(212, 179, 90, 0.35);
+}
+.hero__tag--top {
+  top: 32px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(7, 9, 15, 0.78);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+.hero__pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  animation: sparkle-twinkle 1.6s ease-in-out infinite;
+}
+.hero__tag--card {
+  bottom: 56px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(10, 14, 26, 0.82);
+}
+.hero__legendary-orb {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 28%, #fff7c2, #fbbf24 50%, #8b6914 100%);
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.55);
+}
+.hero__tag-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero__tag-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+.hero__tag-value {
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+
+.hero__scroll {
+  position: absolute;
+  z-index: 5;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  transition: color var(--t-hover);
+}
+.hero__scroll:hover {
+  color: var(--gold);
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--gold), transparent);
+  transform-origin: top;
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+.hero__sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.hero__sparkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--gold-hi);
+  box-shadow: 0 0 6px var(--gold), 0 0 12px var(--gold);
+  animation-name: sparkle-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@media (max-width: 980px) {
+  .hero__tag--card {
+    bottom: 88px;
+    right: 20px;
+  }
+  .hero__tag--top {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+/* Landscape phones / very short viewports above the mobile breakpoint:
+   one screen can't hold the full hero, so let it flow instead of clipping. */
+@media (min-width: 761px) and (max-height: 560px) {
+  .hero {
+    height: auto;
+    min-height: calc(100svh - var(--nav-h, 109px));
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    height: auto;
+    padding-top: 16px;
+  }
+  .hero__shell {
+    padding-bottom: 120px;
+  }
+  .hero__image {
+    left: 50%;
+    opacity: 0.7;
+  }
+  .hero__tag--top {
+    top: 16px;
+  }
+  .hero__tag--card {
+    bottom: 64px;
+    right: 16px;
+  }
+  .hero__scroll {
+    display: none;
+  }
+  .hero__trust {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
