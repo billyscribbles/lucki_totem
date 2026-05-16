@@ -23,14 +23,33 @@ function reducedMotion() {
   )
 }
 
+// Tracks the ≤600px breakpoint so the stage can scale boxes, the orb and
+// the burst to fit a phone. Matches the `max-width: 600px` query the CSS
+// uses, keeping the JS-driven sizes and the layout in lockstep.
+function useIsMobile() {
+  const [mobile, setMobile] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 600px)').matches,
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 600px)')
+    const onChange = (e) => setMobile(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return mobile
+}
+
 // 28 shards flung from the centre outward — each carries its own
-// destination through --tx / --ty custom properties.
-function ParticleBurst() {
+// destination through --tx / --ty custom properties. On phones the throw
+// distance shrinks so the burst stays inside the narrower stage.
+function ParticleBurst({ compact = false }) {
   const shards = useMemo(
     () =>
       Array.from({ length: 28 }, (_, i) => {
         const angle = (Math.PI * 2 * i) / 28 + Math.random() * 0.4
-        const dist = 180 + Math.random() * 200
+        const dist = compact ? 90 + Math.random() * 110 : 180 + Math.random() * 200
         return {
           id: i,
           tx: Math.cos(angle) * dist,
@@ -40,7 +59,7 @@ function ParticleBurst() {
           size: 4 + Math.random() * 8,
         }
       }),
-    [],
+    [compact],
   )
   return (
     <div className="reveal__particles" aria-hidden="true">
@@ -107,6 +126,7 @@ export default function BlindBoxReveal() {
   const [serial, setSerial] = useState(null)
   const [group, setGroup] = useState(null) // { packSize, startRemaining }
   const [openedCount, setOpenedCount] = useState(0)
+  const isMobile = useIsMobile()
 
   const timers = useRef([])
   const modalRef = useRef(null)
@@ -249,6 +269,10 @@ export default function BlindBoxReveal() {
   if (!revealOpen) return null
 
   const winner = winnerKey ? getRarity(winnerKey) : null
+  // Phones get smaller cubes and orb so the 10-box lineup and the prize
+  // both fit a narrow viewport without clipping or overlap.
+  const boxSize = isMobile ? 72 : 120
+  const orbSize = isMobile ? 156 : 220
   const remaining = boxes.filter((b) => !b.vanished).length
   const onStage =
     phase === 'ready' ||
@@ -297,9 +321,10 @@ export default function BlindBoxReveal() {
             className="reveal-modal__close"
             onClick={closeReveal}
             ref={closeRef}
+            aria-label="Close"
           >
             <X size={14} strokeWidth={2} aria-hidden="true" />
-            Close
+            <span className="reveal-modal__close-text">Close</span>
           </button>
         </div>
       </div>
@@ -323,7 +348,7 @@ export default function BlindBoxReveal() {
                   vanished={b.vanished}
                   isWinner={b.id === winnerIdx && phase !== 'ready'}
                   opening={phase === 'opening' && b.id === winnerIdx}
-                  size={120}
+                  size={boxSize}
                 />
               ))}
             </div>
@@ -351,13 +376,13 @@ export default function BlindBoxReveal() {
           {phase === 'revealed' && winner && (
             <div className="reveal__prize">
               <RevealSparkles />
-              <ParticleBurst />
+              <ParticleBurst compact={isMobile} />
 
               <p className="reveal__tier">{winner.label}</p>
               <span className="reveal__tier-rule" aria-hidden="true" />
 
               <div className="reveal__orb">
-                <WhaleOrb rarity={winner.key} size={220} />
+                <WhaleOrb rarity={winner.key} size={orbSize} />
               </div>
 
               <h2 className="reveal__name">{winner.whale}</h2>
@@ -377,7 +402,7 @@ export default function BlindBoxReveal() {
                 </button>
                 <button
                   type="button"
-                  className="btn btn--gold btn--sm"
+                  className={`btn btn--sm ${hasMore ? 'btn--line' : 'btn--gold'}`}
                   onClick={() => setPhase('shipping')}
                 >
                   Ship It to Me <span aria-hidden="true">→</span>
@@ -385,7 +410,7 @@ export default function BlindBoxReveal() {
                 {hasMore && (
                   <button
                     type="button"
-                    className="btn btn--line btn--sm"
+                    className="btn btn--gold btn--sm"
                     onClick={spinAgain}
                   >
                     Spin Again <span aria-hidden="true">→</span>
