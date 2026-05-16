@@ -99,9 +99,9 @@ React Router `<Link to={`/whale/${rarity.key}`}>`. Props: `rarity` object.
 Visual output is identical to today's home lineup card, plus a pointer
 cursor and the existing hover lift now signalling a real link.
 
-The `.rarity*` CSS class names and styles move from `RarityLineup.css` into
-`WhaleCard.css` (or `WhaleCard.css` is created and `RarityLineup.css` keeps
-only the `.rarity-grid` layout). No visual change on the home page.
+The `.rarity*` card CSS (everything except `.rarity-grid`) moves from
+`RarityLineup.css` into a new `WhaleCard.css`. `RarityLineup.css` keeps only
+the `.rarity-grid` layout rules. No visual change on the home page.
 
 ### `RarityLineup.jsx` (refactored)
 
