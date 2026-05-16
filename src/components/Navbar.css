@@ -13,9 +13,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  /* Minimal padding so the logo defines the nav height and fills it. */
-  padding-top: 6px;
-  padding-bottom: 6px;
+  /* Even breathing room above and below the wordmark sets the bar height. */
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .nav__wordmark {
@@ -28,7 +28,7 @@
 }
 .nav__logo {
   display: block;
-  height: 96px;
+  height: 56px;
   width: auto;
   /* Transparent PNG — stacked LUCKI wordmark over the four suits.
      Sized large to fill the glass nav, with a soft gold glow. */
@@ -150,7 +150,7 @@
   }
   .nav__overlay-logo {
     display: block;
-    height: 72px;
+    height: 44px;
     width: auto;
     filter: drop-shadow(0 0 30px rgba(212, 179, 90, 0.2));
   }
