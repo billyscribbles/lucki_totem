@@ -3,10 +3,10 @@ import { useLucki } from '../store/LuckiContext.jsx'
 import Drawer from './Drawer.jsx'
 import WhaleOrb from './WhaleOrb.jsx'
 
-// Cart panel. Checkout and the prototype "skip" shortcut both jump
-// straight into the reveal — there is no real payment step here.
+// Cart panel. Checkout now hands off to the payment overlay — there is
+// no longer a way to skip straight into the reveal.
 export default function CartDrawer() {
-  const { drawer, closeDrawer, cart, removeFromCart, openReveal } = useLucki()
+  const { drawer, closeDrawer, cart, removeFromCart, openCheckout } = useLucki()
   const open = drawer === 'cart'
   const total = cart.reduce((sum, item) => sum + item.price, 0)
 
@@ -49,11 +49,12 @@ export default function CartDrawer() {
               <strong>${total.toFixed(2)}</strong>
             </p>
             <div className="cart__actions">
-              <button type="button" className="btn btn--gold btn--block btn--sm" onClick={openReveal}>
+              <button
+                type="button"
+                className="btn btn--gold btn--block btn--sm"
+                onClick={openCheckout}
+              >
                 Checkout <span aria-hidden="true">→</span>
-              </button>
-              <button type="button" className="btn btn--line btn--block btn--sm" onClick={openReveal}>
-                Skip — Open Box Now
               </button>
             </div>
           </div>
