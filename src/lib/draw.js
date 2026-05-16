@@ -50,26 +50,29 @@ export function makeSerial() {
 // ── Reveal spin timeline ──────────────────────────────────────────────
 // Every reveal cube follows one shared, continuous velocity curve, so
 // the spin is perfectly smooth end to end: wind up from a dead stop,
-// hold at top speed, then glide back down to a complete stop as the
-// boxes poof away one by one. All times are milliseconds from the
-// instant Spin is pressed. BlindBoxReveal schedules the box poofs
-// against these very same constants, so motion and choreography can
-// never drift apart.
+// hold at top speed, then glide down to a slow crawl that the cubes
+// keep right up until they poof away one by one — no box is ever frozen
+// motionless while it is still on the stage. All times are milliseconds
+// from the instant Spin is pressed. BlindBoxReveal schedules the box
+// poofs against these very same constants, so motion and choreography
+// can never drift apart.
 
 export const SPIN_RAMP_MS = 1200 // wind-up: dead stop -> top speed
 export const SPIN_HOLD_MS = 500 // hold at top speed before the first poof
 export const SPIN_MAX_DPS = 1100 // top speed, degrees per second
+export const SPIN_SLOW_DPS = 90 // residual crawl the wind-down eases into
 
 // Gaps (ms) between successive box poofs. Six non-winners vanish; the
 // gaps widen steeply as the spin winds down — each whale that vanishes
 // slows the spin further, so the final pulls feel long, slow and tense.
-// The last value is the still pause held on the lone winner before the
-// suspense phase takes over.
+// The second-last box poofs while still turning at the slow crawl. The
+// last value is the slow-crawl beat held on the lone winner before the
+// suspense phase settles it whale-forward.
 export const POOF_GAPS = [500, 620, 780, 980, 1410, 900]
 
 // When the first box poofs (spin starts winding down) and when the spin
-// reaches a complete stop (one box left). The decay window is exactly
-// the span across which the six non-winners vanish.
+// eases out to its slow residual crawl (one box left). The decay window
+// is exactly the span across which the six non-winners vanish.
 export const SPIN_DECAY_START_MS = SPIN_RAMP_MS + SPIN_HOLD_MS
 export const SPIN_DECAY_END_MS =
   SPIN_DECAY_START_MS + POOF_GAPS.slice(0, -1).reduce((sum, g) => sum + g, 0)
@@ -84,8 +87,10 @@ function smoothstep(p) {
 
 // Spin speed (degrees/sec) at `elapsedMs` after Spin was pressed:
 // smooth wind-up to SPIN_MAX_DPS, a flat hold, then a smooth wind-down
-// to a complete stop. Driven purely by elapsed time — never by how many
-// boxes remain — so the surviving cubes never jolt when a sibling poofs.
+// to SPIN_SLOW_DPS — a slow residual crawl the cubes keep until they
+// leave the stage, so no box is ever motionless on screen. Driven purely
+// by elapsed time — never by how many boxes remain — so the surviving
+// cubes never jolt when a sibling poofs.
 export function spinVelocity(elapsedMs) {
   if (elapsedMs <= 0) return 0
   if (elapsedMs < SPIN_RAMP_MS) {
@@ -95,7 +100,7 @@ export function spinVelocity(elapsedMs) {
   if (elapsedMs < SPIN_DECAY_END_MS) {
     const p =
       (elapsedMs - SPIN_DECAY_START_MS) / (SPIN_DECAY_END_MS - SPIN_DECAY_START_MS)
-    return SPIN_MAX_DPS * (1 - smoothstep(p))
+    return SPIN_SLOW_DPS + (SPIN_MAX_DPS - SPIN_SLOW_DPS) * (1 - smoothstep(p))
   }
-  return 0
+  return SPIN_SLOW_DPS
 }

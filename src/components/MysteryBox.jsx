@@ -42,8 +42,10 @@ export default function MysteryBox({
   // time since the spin began (`spinStartRef`) and advances the angle by
   // that much. Because velocity is purely time-driven, this effect never
   // re-runs mid-spin — surviving cubes keep gliding without a jolt when a
-  // sibling poofs. When the spin stops, the cube eases to the nearest
-  // whole turn so the whale faces the viewer for the win.
+  // sibling poofs. The cube never coasts to a halt on its own: it holds
+  // a slow crawl until it leaves the stage. When the parent ends the
+  // spin (the winner heading into suspense), the cube eases from that
+  // crawl to the nearest whole turn so the whale faces the viewer.
   useEffect(() => {
     const cube = cubeRef.current
     if (!cube) return undefined
