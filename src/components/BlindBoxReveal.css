@@ -1,8 +1,8 @@
 .reveal-modal {
   position: fixed;
-  /* Start below the 109px sticky navbar (logo 96 + padding 12 + border 1)
+  /* Sit flush below the sticky navbar (height published live as --nav-h)
      so the nav stays visible while a box is being opened. */
-  inset: 109px 0 0;
+  inset: var(--nav-h, 77px) 0 0;
   z-index: 1000;
   display: flex;
   flex-direction: column;

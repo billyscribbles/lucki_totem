@@ -29,8 +29,8 @@
 
 html {
   scroll-behavior: smooth;
-  /* anchored sections clear the 80px sticky nav */
-  scroll-padding-top: 96px;
+  /* anchored sections clear the 77px sticky nav */
+  scroll-padding-top: 77px;
 }
 
 body {

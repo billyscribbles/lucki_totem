@@ -3,10 +3,10 @@
   isolation: isolate;
   /* Lock the hero to exactly one screen below the sticky nav so the
      headline, CTAs and "Scroll" cue always sit inside the viewport.
-     --nav-h is measured live by Navbar; 109px is the first-paint fallback.
+     --nav-h is measured live by Navbar; 77px is the first-paint fallback.
      svh keeps it honest under mobile browser chrome. */
-  height: calc(100vh - var(--nav-h, 109px));
-  height: calc(100svh - var(--nav-h, 109px));
+  height: calc(100vh - var(--nav-h, 77px));
+  height: calc(100svh - var(--nav-h, 77px));
   display: flex;
   align-items: center;
   overflow: hidden;
