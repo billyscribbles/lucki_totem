@@ -74,30 +74,47 @@
   color: var(--ink-dim);
 }
 
-/* ── Mobile: collapse to a horizontal strip under the topbar ─────── */
+/* ── Mobile: collapse to a compact strip under the topbar ────────────
+   Title on its own line, then odds chips that wrap rather than scroll.
+   The tier name is kept for screen readers but hidden visually to keep
+   the strip short. */
 @media (max-width: 600px) {
   .odds-legend {
     width: auto;
     align-self: auto;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
+    gap: 4px 8px;
     padding: 10px 16px;
     border-right: none;
     border-bottom: 1px solid rgba(212, 179, 90, 0.12);
-    overflow-x: auto;
   }
   .odds-legend__title {
-    flex: none;
+    flex: 1 0 100%;
+    margin-bottom: 2px;
     font-size: 9px;
   }
   .odds-legend__list {
     flex-direction: row;
-    gap: 4px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
   .odds-legend__row {
     gap: 6px;
-    padding: 4px 6px;
+    padding: 4px 8px;
+  }
+  /* Keep the tier name in the accessibility tree, hide it visually. */
+  .odds-legend__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
   .odds-legend__row--win {
     transform: none;
