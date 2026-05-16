@@ -3,6 +3,7 @@ import { LuckiProvider } from './store/LuckiContext.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import BlindBoxReveal from './components/BlindBoxReveal.jsx'
+import CheckoutOverlay from './components/CheckoutOverlay.jsx'
 import CartDrawer from './components/CartDrawer.jsx'
 import InventoryDrawer from './components/InventoryDrawer.jsx'
 import Toast from './components/Toast.jsx'
@@ -29,6 +30,7 @@ export default function App() {
         <Footer />
 
         <BlindBoxReveal />
+        <CheckoutOverlay />
         <CartDrawer />
         <InventoryDrawer />
         <Toast />
