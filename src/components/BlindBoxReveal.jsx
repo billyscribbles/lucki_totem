@@ -13,6 +13,7 @@ import { useLucki } from '../store/LuckiContext.jsx'
 import MysteryBox from './MysteryBox.jsx'
 import WhaleOrb from './WhaleOrb.jsx'
 import ShippingForm from './ShippingForm.jsx'
+import OddsLegend from './OddsLegend.jsx'
 import './BlindBoxReveal.css'
 
 function reducedMotion() {
@@ -90,7 +91,7 @@ function RevealSparkles() {
   )
 }
 
-// The reveal modal. Bound to one sealed box group (revealBoxId): eight
+// The reveal modal. Bound to one sealed box group (revealBoxId): ten
 // boxes spin, vanish one by one, the survivor bursts open. After each
 // pull the collector keeps the whale digitally or ships it. Multi-pack
 // groups expose "Spin Again" until every box is opened.
@@ -163,7 +164,7 @@ export default function BlindBoxReveal() {
     return clearTimers
   }, [revealOpen, revealBoxId, startBox, clearTimers])
 
-  // Player hit Spin: boxes spin, the seven non-winners poof one by one
+  // Player hit Spin: boxes spin, the nine non-winners poof one by one
   // (slowing down), the survivor opens.
   const startSpin = useCallback(() => {
     if (phase !== 'ready') return
@@ -303,105 +304,109 @@ export default function BlindBoxReveal() {
         </div>
       </div>
 
-      <div className="reveal-modal__stage" style={stageStyle}>
-        {winner &&
-          (phase === 'suspense' || phase === 'opening' || phase === 'revealed') && (
-            <div className="reveal__aura" aria-hidden="true" />
+      <div className="reveal-modal__stage">
+        <OddsLegend winnerKey={winnerKey} revealed={phase === 'revealed'} />
+
+        <div className="reveal__stage-main" style={stageStyle}>
+          {winner &&
+            (phase === 'suspense' || phase === 'opening' || phase === 'revealed') && (
+              <div className="reveal__aura" aria-hidden="true" />
+            )}
+
+          {onStage && (
+            <div className="reveal__lineup">
+              {boxes.map((b) => (
+                <MysteryBox
+                  key={b.id}
+                  rarity={b.rarity}
+                  spinning={phase === 'spinning' && !b.vanished}
+                  vanished={b.vanished}
+                  isWinner={b.id === winnerIdx && phase !== 'ready'}
+                  opening={phase === 'opening' && b.id === winnerIdx}
+                  size={120}
+                />
+              ))}
+            </div>
           )}
 
-        {onStage && (
-          <div className="reveal__lineup">
-            {boxes.map((b) => (
-              <MysteryBox
-                key={b.id}
-                rarity={b.rarity}
-                spinning={phase === 'spinning' && !b.vanished}
-                vanished={b.vanished}
-                isWinner={b.id === winnerIdx && phase !== 'ready'}
-                opening={phase === 'opening' && b.id === winnerIdx}
-                size={120}
-              />
-            ))}
-          </div>
-        )}
-
-        {(phase === 'spinning' || phase === 'suspense') && (
-          <p
-            className={`reveal__caption${phase === 'suspense' ? ' reveal__caption--sealed' : ''}`}
-          >
-            {phase === 'suspense' ? 'Your luck is sealed' : `${remaining} boxes remain`}
-          </p>
-        )}
-
-        {phase === 'ready' && (
-          <button
-            type="button"
-            className="btn btn--gold reveal__spin"
-            onClick={startSpin}
-            ref={spinRef}
-          >
-            Spin to Open <span aria-hidden="true">→</span>
-          </button>
-        )}
-
-        {phase === 'revealed' && winner && (
-          <div className="reveal__prize">
-            <RevealSparkles />
-            <ParticleBurst />
-
-            <p className="reveal__tier">{winner.label}</p>
-            <span className="reveal__tier-rule" aria-hidden="true" />
-
-            <div className="reveal__orb">
-              <WhaleOrb rarity={winner.key} size={220} />
-            </div>
-
-            <h2 className="reveal__name">{winner.whale}</h2>
-            <p className="reveal__quote">“{winner.tagline.join(' ')}”</p>
-            <p className="reveal__serial">
-              #{serial} · Series 01 · Odds {winner.odds}
+          {(phase === 'spinning' || phase === 'suspense') && (
+            <p
+              className={`reveal__caption${phase === 'suspense' ? ' reveal__caption--sealed' : ''}`}
+            >
+              {phase === 'suspense' ? 'Your luck is sealed' : `${remaining} boxes remain`}
             </p>
+          )}
 
-            <div className="reveal__actions">
-              <button
-                type="button"
-                className="btn btn--line btn--sm"
-                onClick={keepDigital}
-                ref={actionRef}
-              >
-                Keep Digital
-              </button>
-              <button
-                type="button"
-                className="btn btn--gold btn--sm"
-                onClick={() => setPhase('shipping')}
-              >
-                Ship It to Me <span aria-hidden="true">→</span>
-              </button>
-              {hasMore && (
+          {phase === 'ready' && (
+            <button
+              type="button"
+              className="btn btn--gold reveal__spin"
+              onClick={startSpin}
+              ref={spinRef}
+            >
+              Spin to Open <span aria-hidden="true">→</span>
+            </button>
+          )}
+
+          {phase === 'revealed' && winner && (
+            <div className="reveal__prize">
+              <RevealSparkles />
+              <ParticleBurst />
+
+              <p className="reveal__tier">{winner.label}</p>
+              <span className="reveal__tier-rule" aria-hidden="true" />
+
+              <div className="reveal__orb">
+                <WhaleOrb rarity={winner.key} size={220} />
+              </div>
+
+              <h2 className="reveal__name">{winner.whale}</h2>
+              <p className="reveal__quote">“{winner.tagline.join(' ')}”</p>
+              <p className="reveal__serial">
+                #{serial} · Series 01 · Odds {winner.odds}
+              </p>
+
+              <div className="reveal__actions">
                 <button
                   type="button"
                   className="btn btn--line btn--sm"
-                  onClick={spinAgain}
+                  onClick={keepDigital}
+                  ref={actionRef}
                 >
-                  Spin Again <span aria-hidden="true">→</span>
+                  Keep Digital
                 </button>
-              )}
+                <button
+                  type="button"
+                  className="btn btn--gold btn--sm"
+                  onClick={() => setPhase('shipping')}
+                >
+                  Ship It to Me <span aria-hidden="true">→</span>
+                </button>
+                {hasMore && (
+                  <button
+                    type="button"
+                    className="btn btn--line btn--sm"
+                    onClick={spinAgain}
+                  >
+                    Spin Again <span aria-hidden="true">→</span>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {phase === 'shipping' && winner && (
-          <div className="reveal__ship">
-            <p className="reveal__ship-tier" style={{ color: winner.color }}>
-              {winner.label} · {winner.whale}
-            </p>
-            <ShippingForm
-              onSubmit={shipWhale}
-              onBack={() => setPhase('revealed')}
-            />
-          </div>
-        )}
+          {phase === 'shipping' && winner && (
+            <div className="reveal__ship">
+              <p className="reveal__ship-tier" style={{ color: winner.color }}>
+                {winner.label} · {winner.whale}
+              </p>
+              <ShippingForm
+                onSubmit={shipWhale}
+                onBack={() => setPhase('revealed')}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

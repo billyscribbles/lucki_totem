@@ -1,0 +1,116 @@
+/* Drop-odds side panel on the reveal modal. Faint gold seam to match
+   the modal topbar; one row per rarity tier. */
+.odds-legend {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 200px;
+  padding: 24px 20px;
+  background: var(--panel);
+  border-right: 1px solid rgba(212, 179, 90, 0.12);
+}
+
+.odds-legend__title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.odds-legend__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odds-legend__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--t-hover),
+    transform var(--t-hover);
+}
+
+.odds-legend__swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.odds-legend__label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odds-legend__odds {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+}
+
+/* Won tier — glows in its own colour once the prize is revealed. */
+.odds-legend__row--win {
+  border-color: var(--r);
+  box-shadow: 0 0 14px var(--r-glow);
+  transform: scale(1.04);
+}
+.odds-legend__row--win .odds-legend__label {
+  color: var(--r);
+}
+.odds-legend__row--win .odds-legend__odds {
+  color: var(--ink-dim);
+}
+
+/* ── Mobile: collapse to a horizontal strip under the topbar ─────── */
+@media (max-width: 600px) {
+  .odds-legend {
+    width: auto;
+    align-self: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 179, 90, 0.12);
+    overflow-x: auto;
+  }
+  .odds-legend__title {
+    flex: none;
+    font-size: 9px;
+  }
+  .odds-legend__list {
+    flex-direction: row;
+    gap: 4px;
+  }
+  .odds-legend__row {
+    gap: 6px;
+    padding: 4px 6px;
+  }
+  /* Drop the tier label on narrow screens — swatch + % only. */
+  .odds-legend__label {
+    display: none;
+  }
+  .odds-legend__row--win {
+    transform: none;
+  }
+}

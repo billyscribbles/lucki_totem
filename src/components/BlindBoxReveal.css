@@ -91,8 +91,16 @@
 .reveal-modal__stage {
   flex: 1;
   display: grid;
-  place-items: center;
+  grid-template-columns: auto 1fr;
+  min-height: 0;
+}
+
+/* The content area beside the odds legend — owns the centred prize and
+   the absolutely-positioned spin button, caption and aura. */
+.reveal__stage-main {
   position: relative;
+  display: grid;
+  place-items: center;
   overflow: hidden;
   padding: 32px;
 }
@@ -250,6 +258,10 @@
     display: none;
   }
   .reveal-modal__stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .reveal__stage-main {
     padding: 20px 16px;
   }
   .reveal__lineup {
